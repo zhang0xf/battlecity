@@ -14,17 +14,16 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-      /*  player1Basic = Resources.Load("Prefabs/Player/Player1Basic") as GameObject;
-        if (player1Basic != null)
-        {
-            player1Basic = Instantiate(player1Basic);
-        }*/
+
+        Notification notify = new Notification(NotificationNames.LOAD_ENEMY, this);
+        MessageController.Instance.AddNotification(notify, LoadEnemy);
+        // notify.Send();
     }
 
     // Update is called once per frame
     void Update()
     {
-    
+       
     }
 
     private void FixedUpdate()
@@ -32,13 +31,13 @@ public class Player : MonoBehaviour
         player1Basic = GameObject.Find("Player1Basic");
         if (player1Basic == null)
         {
-            Debug.LogError("nullpointer");
+            Debug.LogError("null pointer");
             return;
         }
 
         animator = player1Basic.GetComponent<Animator>();
         if (animator == null) {
-            Debug.LogError("nullpointer");
+            Debug.LogError("null pointer");
             return;
         }
 
@@ -59,7 +58,7 @@ public class Player : MonoBehaviour
 
             GameObject player1BigCannon = Resources.Load("Prefabs/Player/Player1BigCannon") as GameObject;
             if (null == player1BigCannon) {
-                Debug.LogError("nullpointer");
+                Debug.LogError("null pointer");
                 return;
             }
             player1BigCannon = Instantiate(player1BigCannon);
@@ -71,4 +70,17 @@ public class Player : MonoBehaviour
         }
 
     }
+
+    public void LoadEnemy(Notification notify) 
+    {
+        GameObject player = GameObject.Find("Player1Basic");
+        if (null == player) { Debug.Log("can not find a player"); }
+        // Transform transform = player.GetComponent<Transform>();
+        localposition = player.GetComponent<Transform>().position;
+        localrotation = player.GetComponent<Transform>().rotation;
+
+        GameObject obj = Resources.Load("Prefabs/Enemy/Enemy1") as GameObject;
+        obj = Instantiate(obj, localposition, localrotation);
+    }
+
 }
