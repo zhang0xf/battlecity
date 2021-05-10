@@ -9,13 +9,8 @@ public enum GameState : int
     ENTERGAME
 }
 
-public class NotificationNames 
-{
-    public static string TEST = "test";
-    public static string LOAD_ENEMY = "load_enemy";
-
-}
-
 // Î¯ÍÐ
 public delegate void MessageControlHandler(Notification notify);
+
+
 

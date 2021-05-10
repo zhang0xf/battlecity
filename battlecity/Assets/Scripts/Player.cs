@@ -11,13 +11,22 @@ public class Player : MonoBehaviour
     float horizontal;
     float vertical;
 
+    private void Awake()
+    {
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        Config.LoadConfig();
 
-        Notification notify = new Notification(NotificationNames.LOAD_ENEMY, this);
+        Notification notify = new Notification(NotificationName.LOAD_ENEMY, this);
         MessageController.Instance.AddNotification(notify, LoadEnemy);
         // notify.Send();
+
+        MessageController.Instance.AddSubscriber(notify, LoadEnemy);
+        notify.Send(true);
     }
 
     // Update is called once per frame
@@ -53,11 +62,14 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
+           
+
             localposition = player1Basic.GetComponent<Transform>().position;
             localrotation = player1Basic.GetComponent<Transform>().rotation;
 
             GameObject player1BigCannon = Resources.Load("Prefabs/Player/Player1BigCannon") as GameObject;
-            if (null == player1BigCannon) {
+            if (null == player1BigCannon)
+            {
                 Debug.LogError("null pointer");
                 return;
             }

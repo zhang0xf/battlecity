@@ -16,17 +16,21 @@ public class Notification : IEnumerable<KeyValuePair<string, object>>
 
     public object Content
     {
-        get {
-            return content;
-        }
-        set {
-            content = value;
-        }
+        get { return content; }
+        set { content = value; }
     }
 
     public void Send()
     {
         MessageController.Instance.SendNotification(this);
+    }
+
+    public void Send(bool IsEvent)
+    {
+        if (IsEvent)
+            MessageController.Instance.ActiveEventHandler(this);
+        else
+            MessageController.Instance.SendNotification(this);
     }
 
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
