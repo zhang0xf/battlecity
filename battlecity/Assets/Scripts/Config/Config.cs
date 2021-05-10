@@ -8,6 +8,7 @@ public static class Config
     public static void LoadConfig()
     {
         NotificationConfig.Instance.LoadConfig("Config/Notification");
+        TankConfig.Instance.LoadConfig("Config/Tank");
     }
 
 

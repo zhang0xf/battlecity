@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Notification : IEnumerable<KeyValuePair<string, object>>
+public class Notification : IEnumerable<KeyValuePair<string, object>>   // 迭代器，暂时没有使用其特性！
 {
     private object content;    // 属性
     public object Sender { private set; get; }  // 自动属性
@@ -20,17 +20,16 @@ public class Notification : IEnumerable<KeyValuePair<string, object>>
         set { content = value; }
     }
 
+    // 方案1
     public void Send()
     {
         MessageController.Instance.SendNotification(this);
     }
 
-    public void Send(bool IsEvent)
+    // 方案2
+    public void SendEventActive()
     {
-        if (IsEvent)
-            MessageController.Instance.ActiveEventHandler(this);
-        else
-            MessageController.Instance.SendNotification(this);
+        MessageController.Instance.ActiveEventHandler(this);
     }
 
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator()

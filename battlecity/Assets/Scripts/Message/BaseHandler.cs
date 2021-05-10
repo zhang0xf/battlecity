@@ -7,10 +7,10 @@ public class BaseHandler
     private string name = string.Empty;
    
 #pragma warning disable 414
-    public event MessageControlHandler eventHandler = null;
-#pragma warning disable 414 // CS0414
-
-    //warning CS0414: The field 'BaseHandler.eventHandler' is assigned but its value is never used
+    public event MessageControlHandler EventHandler = null;
+    // warning CS0414: The field 'BaseHandler.eventHandler' is assigned but its value is never used
+    // CS0414 > 414
+#pragma warning disable 414
 
     public string Name
     {
@@ -20,16 +20,16 @@ public class BaseHandler
 
     public virtual void AddSubscriber(MessageControlHandler handler)
     {
-        this.eventHandler += handler;
+        this.EventHandler += handler;
     }
 
     public virtual void RemoveSubscriber(MessageControlHandler handler)
     {
-        this.eventHandler -= handler;
+        this.EventHandler -= handler;
     }
 
     public virtual void Execute(Notification notify)
     {
-
+        // Base Class Do Nothing !
     }
 }

@@ -29,20 +29,21 @@ public class NotificationConfig
     {
         if (null == filePath) { return; }
 
-        XmlDocument Xdoc = Config.LoadXmlConfig(filePath);
-        if (null == Xdoc)
+        XmlDocument xdoc = Config.LoadXmlConfig(filePath);
+        if (null == xdoc)
         {
             Debug.LogError(string.Format("load error : filepath[{0}]", filePath));
             return;
         }
 
-        XmlNode Node = Xdoc.FirstChild;
-        Node = Node.NextSibling;
-        if (!Node.HasChildNodes) { return; }
+        XmlNode node = xdoc.FirstChild;
+        node = node.NextSibling;
+        if (!node.HasChildNodes) { return; }
 
-        XmlNodeList list = Node.ChildNodes;
+        XmlNodeList list = node.ChildNodes;
         foreach (XmlNode element in list)
         {
+            if (!element.HasChildNodes) continue;
             AnalyzeMsgLabel(element);
         }
     }

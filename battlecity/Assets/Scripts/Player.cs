@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
         // notify.Send();
 
         MessageController.Instance.AddSubscriber(notify, LoadEnemy);
-        notify.Send(true);
+        notify.SendEventActive();
     }
 
     // Update is called once per frame
@@ -62,8 +62,6 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-           
-
             localposition = player1Basic.GetComponent<Transform>().position;
             localrotation = player1Basic.GetComponent<Transform>().rotation;
 
