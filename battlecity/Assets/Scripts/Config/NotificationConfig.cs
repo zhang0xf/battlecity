@@ -25,14 +25,12 @@ public class NotificationConfig
         }
     }
 
-    public void LoadConfig(string filePath)
+    public void LoadConfig()
     {
-        if (null == filePath) { return; }
-
-        XmlDocument xdoc = Config.LoadXmlConfig(filePath);
+        XmlDocument xdoc = Config.LoadXmlConfig("Config/NotificationConfig");
         if (null == xdoc)
         {
-            Debug.LogError(string.Format("load error : filepath[{0}]", filePath));
+            Debug.LogError(string.Format("load error : Config/NotificationConfig"));
             return;
         }
 

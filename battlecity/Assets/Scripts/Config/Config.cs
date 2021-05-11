@@ -7,10 +7,10 @@ public static class Config
 {
     public static void LoadConfig()
     {
-        NotificationConfig.Instance.LoadConfig("Config/Notification");
-        TankConfig.Instance.LoadConfig("Config/Tank");
+        PlayerConfig.Instance.LoadConfig();
+        EnemyConfig.Instance.LoadConfig();
+        NotificationConfig.Instance.LoadConfig();
     }
-
 
     public static XmlDocument LoadXmlConfig(string FilePath)
     {
@@ -25,7 +25,4 @@ public static class Config
         }
         return null;
     }
-
-
-
 }

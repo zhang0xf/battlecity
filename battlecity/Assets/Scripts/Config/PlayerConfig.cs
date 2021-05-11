@@ -1,0 +1,117 @@
+using System;
+using System.Collections.Generic;
+using System.Xml;
+using UnityEngine;
+
+public class PlayerConfig
+{
+    private PlayerData data = null;
+    private Dictionary<PlayerState, PlayerData> dict = null;
+    private static PlayerConfig mInstance = null;
+
+    private PlayerConfig()
+    {
+        data = new PlayerData();
+        dict = new Dictionary<PlayerState, PlayerData>();
+    }
+
+    public static PlayerConfig Instance
+    {
+        get
+        {
+            if (null == mInstance)
+                mInstance = new PlayerConfig();
+            return mInstance;
+        }
+    }
+
+    public void LoadConfig()
+    {
+        XmlDocument xdoc = Config.LoadXmlConfig("Config/PlayerConfig");
+        if (null == xdoc)
+        {
+            Debug.LogError(string.Format("load error : Config/PlayerConfig"));
+            return;
+        }
+
+        dict.Clear();
+
+        XmlNode node = xdoc.FirstChild;
+        node = node.NextSibling;
+        if (!node.HasChildNodes) { return; }
+        XmlNodeList list = node.ChildNodes;
+
+        foreach (XmlElement element in list)
+        {
+            if (!element.HasChildNodes) continue;
+            AnalyzePlayerLabel(element);
+            PlayerState state = GetPlayerID(element);
+            if (dict.ContainsKey(state))
+            {
+                dict.Remove(state);
+                Debug.Log(string.Format("find conflict in xml : {0} repeated", data.Form));
+            }
+            dict.Add(state, data);
+        }
+    }
+
+    private void AnalyzePlayerLabel(XmlElement node)
+    {
+        XmlNodeList list = node.ChildNodes;
+        foreach (XmlElement element in list)
+        {
+            AnalyzeFormLabel(element);
+            AnalyzeSpeedLabel(element);
+            AnalyzeHealthLabel(element);
+            AnalyzeSheildTimeLabel(element);
+            AnalyzeCoolingLabel(element);
+        }
+    }
+
+    private PlayerState GetPlayerID(XmlNode node)
+    {
+        if (!string.IsNullOrEmpty(node.Attributes["id"].Value))
+            return (PlayerState)int.Parse(node.Attributes["id"].Value);
+        return PlayerState.NONE;
+    }
+
+    private void AnalyzeFormLabel(XmlElement node)
+    {
+        if (node.Name.Equals("FORM") &&
+            node.Attributes["value_type"].Value.Equals("string") &&
+            !string.IsNullOrEmpty(node.Attributes["value"].Value))
+            data.Form = node.Attributes["value"].Value;
+    }
+
+    private void AnalyzeSpeedLabel(XmlElement node)
+    {
+        if (node.Name.Equals("SPEED") &&
+            !string.IsNullOrEmpty(node.Attributes["value"].Value) &&
+            node.Attributes["value_type"].Value.Equals("float"))
+            data.Speed = float.Parse(node.Attributes["value"].Value);
+    }
+
+    private void AnalyzeHealthLabel(XmlElement node)
+    {
+        if (node.Name.Equals("HEALTH") &&
+            !string.IsNullOrEmpty(node.Attributes["value"].Value) &&
+            node.Attributes["value_type"].Value.Equals("int"))
+            data.Health = int.Parse(node.Attributes["value"].Value);
+    }
+
+    private void AnalyzeSheildTimeLabel(XmlElement node)
+    {
+        if (node.Name.Equals("SHEILD_TIME") &&
+            !string.IsNullOrEmpty(node.Attributes["value"].Value) &&
+            node.Attributes["value_type"].Value.Equals("float"))
+            data.SheildTime = float.Parse(node.Attributes["value"].Value);
+    }
+
+    private void AnalyzeCoolingLabel(XmlElement node)
+    {
+        if (node.Name.Equals("COOLING") &&
+            !string.IsNullOrEmpty(node.Attributes["value"].Value) &&
+            node.Attributes["value_type"].Value.Equals("float"))
+            data.Cooling = float.Parse(node.Attributes["value"].Value);
+    }
+}

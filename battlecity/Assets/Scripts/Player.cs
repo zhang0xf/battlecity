@@ -13,20 +13,18 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-
+    
     }
 
     // Start is called before the first frame update
     void Start()
     {
         Config.LoadConfig();
-
         Notification notify = new Notification(NotificationName.LOAD_ENEMY, this);
         MessageController.Instance.AddNotification(notify, LoadEnemy);
-        // notify.Send();
-
-        MessageController.Instance.AddSubscriber(notify, LoadEnemy);
-        notify.SendEventActive();
+        notify.Send();
+        // MessageController.Instance.AddSubscriber(notify, LoadEnemy);
+        // notify.SendEventActive();
     }
 
     // Update is called once per frame
