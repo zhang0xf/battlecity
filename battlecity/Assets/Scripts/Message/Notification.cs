@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class Notification : IEnumerable<KeyValuePair<string, object>>   // µü´úÆ÷£¬ÔÝÊ±Ã»ÓÐÊ¹ÓÃÆäÌØÐÔ£¡
+public class Notification : IEnumerable<KeyValuePair<string, object>>   // IEnumerable : è¿­ä»£å™¨
 {
-    private object content;    // ÊôÐÔ
-    public object Sender { private set; get; }  // ×Ô¶¯ÊôÐÔ
+    private object content;    // å±žæ€§
+    public object Sender { private set; get; }  // è‡ªåŠ¨å±žæ€§
     public string Name { private set; get; }
     
     public Notification(string name, object obj)
@@ -20,13 +19,13 @@ public class Notification : IEnumerable<KeyValuePair<string, object>>   // µü´úÆ
         set { content = value; }
     }
 
-    // ·½°¸1
+    // æ–¹æ¡ˆ1
     public void Send()
     {
         MessageController.Instance.SendNotification(this);
     }
 
-    // ·½°¸2
+    // æ–¹æ¡ˆ2
     public void SendEventActive()
     {
         MessageController.Instance.ActiveEventHandler(this);

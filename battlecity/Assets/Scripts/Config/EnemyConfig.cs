@@ -1,18 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
 public class EnemyConfig
 {
-    private EnemyData data = null;
+    private EnemyConfigData data = null;
     private static EnemyConfig mInstance = null;
-    private Dictionary<EnemyType, EnemyData> dict = null;
+    private Dictionary<EnemyType, EnemyConfigData> dict = null;
 
     private EnemyConfig()
     {
-        data = new EnemyData();
-        dict = new Dictionary<EnemyType, EnemyData>();
+        data = new EnemyConfigData();
+        dict = new Dictionary<EnemyType, EnemyConfigData>();
     }
 
     public static EnemyConfig Instance

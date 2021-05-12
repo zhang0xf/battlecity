@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class MessageController
 {
-    /* -¼ò»¯·½·¨- */
-    // 1. ½«Î¯ÍĞ~=º¯ÊıÖ¸Õë¡£
+    // æ–¹æ¡ˆ1(ç®€åŒ–)ï¼šå°†å§”æ‰˜ ~= å‡½æ•°æŒ‡é’ˆã€‚
     private static MessageController mInstance = null;
     private Dictionary<string, List<MessageControlHandler>> dict = null;
 
-    /* -¸´ÔÓ·½·¨- */
-    // 1. Ö§³ÖÅäÖÃÎÄ¼şµÄ²ãµş»¯¡£
-    // 2. »ùÓÚÒ»ÌõÏûÏ¢½øĞĞ¶àÄÚÈİ´¦Àí¡£
+    // æ–¹æ¡ˆ2ï¼šäº‹ä»¶è§¦å‘ã€‚æ”¯æŒé…ç½®æ–‡ä»¶çš„å±‚å åŒ–å’Œä¸€æ¡æ¶ˆæ¯çš„å¤šå¤„ç†ã€‚
     private Dictionary<string, Type> dictType = null;
     private Dictionary<string, BaseHandler> dictHandler = null;
 
@@ -79,7 +76,7 @@ public class MessageController
 
         foreach (MessageControlHandler handler in list)
         {
-            handler(notify);    // Ö±½Óµ÷ÓÃÎ¯ÍĞ£¬¶ø·ÇÍ¨¹ı´¥·¢ÊÂ¼şµÄ¶©ÔÄ¡£
+            handler(notify);    // æ–¹æ¡ˆ1ï¼šå°†å§”æ‰˜ç”¨ä½œå‡½æ•°æŒ‡é’ˆã€‚
         }
     }
 
@@ -98,26 +95,14 @@ public class MessageController
     public void AddHandler(string notifyName, BaseHandler handler)
     {
         if (dictHandler.ContainsKey(notifyName))
-        {
             dictHandler.Remove(notifyName);
-            dictHandler.Add(notifyName, handler);
-        }
-        else
-        {
-            dictHandler.Add(notifyName, handler);
-        }
+        dictHandler.Add(notifyName, handler);
     }
 
     public BaseHandler GetHandler(string notifyName)
     {
         if (null == dictHandler || !dictHandler.ContainsKey(notifyName)) return null;
         return dictHandler[notifyName];
-    }
-
-    public void PrintDictionary(Dictionary<string, BaseHandler> dict)
-    {
-        foreach (string key in dict.Keys)
-            Debug.Log(string.Format("key : {0}, value : {1}", key, dict[key]));
     }
 
     public void AddSubscriber(Notification notify, MessageControlHandler handler)

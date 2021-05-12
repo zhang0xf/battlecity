@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetHandler : BaseHandler
@@ -8,20 +6,20 @@ public class TargetHandler : BaseHandler
 
     public override void AddSubscriber(MessageControlHandler handler)
     {
-        Debug.Log("TargetHandler");
-        this.EventHandler += handler;
+        EventHandler += handler;
+        Debug.Log("TargetHandler AddSubscriber");
     }
 
     public override void RemoveSubscriber(MessageControlHandler handler)
     {
-        this.EventHandler -= handler;
+        EventHandler -= handler;
     }
 
     public override void Execute(Notification notify)
     {
-        Debug.Log("TargetHandler execute");
-        this.EventHandler(notify);
+        EventHandler(notify);
         base.Execute(notify);
+        Debug.Log("TargetHandler execute");
     }
 
 }

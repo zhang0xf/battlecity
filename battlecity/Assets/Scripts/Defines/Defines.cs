@@ -1,36 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+public enum ObjectState
+{ 
+    NONE,
+    INITIAL,
+    LOADING,
+    READY,
+    RELEASING,
+    CLOSE
+}
 
-public enum GameState : int
-{
-    NULL,
-    START,
-    OPTION,
-    ENTERGAME
+public enum ObjectRegisterState
+{ 
+    NONE,
+    NEED,
+    DONE
 }
 
 public enum PlayerState : int
 {
     NONE = -1,
     BASIC = 1,
-    LONG_CANON,
-    BIG_CANNON,
-    ULTIMATE
+    LONG_CANON = 2,
+    BIG_CANNON = 3,
+    ULTIMATE = 4
 }
 
 public enum EnemyType : int
 { 
     NONE = -1,
     BASIC = 1,
-    QUICK,
-    ARMOR,
-    BASIC_STRENGTHEN,
-    QUICK_STRENGTHEN,
-    ARMOR_STRENGTHEN
+    QUICK = 2,
+    ARMOR = 3,
+    BASIC_STRENGTHEN = 4,
+    QUICK_STRENGTHEN = 5,
+    ARMOR_STRENGTHEN = 6
 }
 
-public class PlayerData
+public class PlayerConfigData
 {
     public string Form { set; get; }
     public float Speed { set; get; }
@@ -40,7 +45,7 @@ public class PlayerData
     public PlayerState State { set; get; }
 }
 
-public class EnemyData
+public class EnemyConfigData
 {
     public string Form { set; get; }
     public float Speed { set; get; }
@@ -49,5 +54,7 @@ public class EnemyData
     public EnemyType Type { set; get; }
 }
 
-// Î¯ÍÐ
+// å§”æ‰˜
 public delegate void MessageControlHandler(Notification notify);
+
+public delegate void StateChangedHandler(object sender, ObjectState newState, ObjectState oldState);

@@ -1,18 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
 public class PlayerConfig
 {
-    private PlayerData data = null;
-    private Dictionary<PlayerState, PlayerData> dict = null;
+    private PlayerConfigData data = null;
+    private Dictionary<PlayerState, PlayerConfigData> dict = null;
     private static PlayerConfig mInstance = null;
 
     private PlayerConfig()
     {
-        data = new PlayerData();
-        dict = new Dictionary<PlayerState, PlayerData>();
+        data = new PlayerConfigData();
+        dict = new Dictionary<PlayerState, PlayerConfigData>();
     }
 
     public static PlayerConfig Instance

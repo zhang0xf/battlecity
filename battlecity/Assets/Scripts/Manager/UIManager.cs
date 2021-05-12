@@ -3,17 +3,21 @@ using System.Collections.Generic;
 
 public class UIManager
 {
-    private static UIManager Instance = null;
-
-    private static UIManager GetInstance()
-    {
-        if (Instance == null) {
-            Instance =  new UIManager();
-        }
-        return Instance;
+    private static UIManager mInstance = null;
+    private UIManager()
+    { 
+        
     }
 
-
+    private static UIManager Instance
+    {
+        get
+        {
+            if (mInstance == null)
+                mInstance = new UIManager();
+            return mInstance;
+        }
+    }
 
 
 }
