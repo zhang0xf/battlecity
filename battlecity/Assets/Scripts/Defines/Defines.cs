@@ -8,50 +8,28 @@ public enum ObjectState
     CLOSE
 }
 
-public enum ObjectRegisterState
+public enum RegisterState
+{ 
+    NONE,   // 不需要注册
+    NEED,   // 需要注册
+    DONE    // 已注册
+}
+
+public enum GameState   // 游戏状态
 { 
     NONE,
-    NEED,
-    DONE
+    LOAD,
+    OPTION,
+    START,
+    IN_GAME,
+    GAME_OVER,
+    QUIT
 }
 
-public enum PlayerState : int
-{
-    NONE = -1,
-    BASIC = 1,
-    LONG_CANON = 2,
-    BIG_CANNON = 3,
-    ULTIMATE = 4
-}
-
-public enum EnemyType : int
+public enum UIType : int
 { 
-    NONE = -1,
-    BASIC = 1,
-    QUICK = 2,
-    ARMOR = 3,
-    BASIC_STRENGTHEN = 4,
-    QUICK_STRENGTHEN = 5,
-    ARMOR_STRENGTHEN = 6
-}
-
-public class PlayerConfigData
-{
-    public string Form { set; get; }
-    public float Speed { set; get; }
-    public int Health { set; get; }
-    public float SheildTime { set; get; }
-    public float Cooling { set; get; }
-    public PlayerState State { set; get; }
-}
-
-public class EnemyConfigData
-{
-    public string Form { set; get; }
-    public float Speed { set; get; }
-    public int Health { set; get; }
-    public float Cooling { set; get; }
-    public EnemyType Type { set; get; }
+    NONE = 0,
+    GAME_START_UI,
 }
 
 // 委托

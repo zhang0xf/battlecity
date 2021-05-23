@@ -2,6 +2,25 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
+public enum PlayerState : int
+{
+    NONE = -1,
+    BASIC = 1,
+    LONG_CANON = 2,
+    BIG_CANNON = 3,
+    ULTIMATE = 4
+}
+
+public class PlayerConfigData
+{
+    public string Form { set; get; }
+    public float Speed { set; get; }
+    public int Health { set; get; }
+    public float SheildTime { set; get; }
+    public float Cooling { set; get; }
+    public PlayerState State { set; get; }
+}
+
 public class PlayerConfig
 {
     private PlayerConfigData data = null;

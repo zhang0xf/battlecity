@@ -6,8 +6,8 @@ public class TargetHandler : BaseHandler
 
     public override void AddSubscriber(MessageControlHandler handler)
     {
-        EventHandler += handler;
         Debug.Log("TargetHandler AddSubscriber");
+        EventHandler += handler;
     }
 
     public override void RemoveSubscriber(MessageControlHandler handler)
@@ -17,9 +17,8 @@ public class TargetHandler : BaseHandler
 
     public override void Execute(Notification notify)
     {
+        Debug.Log("TargetHandler execute");
         EventHandler(notify);
         base.Execute(notify);
-        Debug.Log("TargetHandler execute");
     }
-
 }

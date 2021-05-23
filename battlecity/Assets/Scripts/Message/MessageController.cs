@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class MessageController
 {
-    // 方案1(简化)：将委托 ~= 函数指针。
+    // 方案1：将委托 ~= 函数指针（简化）
     private static MessageController mInstance = null;
     private Dictionary<string, List<MessageControlHandler>> dict = null;
 
-    // 方案2：事件触发。支持配置文件的层叠化和一条消息的多处理。
+    // 方案2：事件触发（比较麻烦）
     private Dictionary<string, Type> dictType = null;
     private Dictionary<string, BaseHandler> dictHandler = null;
 
@@ -36,14 +36,14 @@ public class MessageController
         RegisterType(t.GetType().Name, t.GetType());
     }
 
-    public void AddNotification(Notification notify, MessageControlHandler handler)
+    public void AddNotification(string notifyName, MessageControlHandler handler)
     {
         List<MessageControlHandler> list = null;
-        if (!dict.ContainsKey(notify.Name))
+        if (!dict.ContainsKey(notifyName))
         {
             list = new List<MessageControlHandler>();
             list.Add(handler);
-            dict.Add(notify.Name, list);
+            dict.Add(notifyName, list);
         }
         else
         {

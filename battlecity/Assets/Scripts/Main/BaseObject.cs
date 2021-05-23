@@ -6,12 +6,12 @@ public class BaseObject
 {
     private ObjectState mState;
     public event StateChangedHandler StateHandler;
-    private ObjectRegisterState mRegisterState;  // private : ¿É±»×ÓÀà¼Ì³Ğµ«²»¿É±»×ÓÀà·ÃÎÊ¡£·ÃÎÊ·½·¨£ºRegisterState(public)
+    private RegisterState mRegisterState;  // private : ä¸å¯è¢«å­ç±»è®¿é—®ï¼Œé€šè¿‡è½¬æ¢ä¸ºçˆ¶ç±»å¼•ç”¨è®¿é—®ï¼
 
     public BaseObject()
     {
         mState = ObjectState.INITIAL;
-        mRegisterState = ObjectRegisterState.NONE;
+        mRegisterState = RegisterState.NONE;
     }
 
     public ObjectState State
@@ -30,7 +30,7 @@ public class BaseObject
         }
     }
 
-    public ObjectRegisterState RegisterState
+    public RegisterState RegState
     {
         get { return mRegisterState; }
         set
@@ -47,31 +47,25 @@ public class BaseObject
         if (State != ObjectState.INITIAL) { return; }
         State = ObjectState.LOADING;
         RegisterModule(this);
-        Loading();
+        OnLoad();
     }
 
-    protected virtual void Loading()
+    protected virtual void OnLoad()
     {
-        // ¶àÌ¬
-        State = ObjectState.READY;
+        State = ObjectState.READY;  // å¤šæ€
     }
 
     public void Release()
     { 
         
     }
-
-    public void Releasing()
-    { 
-        
-    }
     
     private void RegisterModule(BaseObject obj)
     {
-        if (RegisterState == ObjectRegisterState.NEED)
+        if (RegState == RegisterState.NEED)
         {
             ModuleManager.Instance.RegisterModule(obj);    // The this keyword refers to the current instance of the class.
-            RegisterState = ObjectRegisterState.DONE;
+            RegState = RegisterState.DONE;
         }
     }
 }

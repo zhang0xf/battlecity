@@ -5,6 +5,7 @@ public static class Config
 {
     public static void LoadConfig()
     {
+        UIPathConfig.Instance.LoadConfig();
         PlayerConfig.Instance.LoadConfig();
         EnemyConfig.Instance.LoadConfig();
         NotificationConfig.Instance.LoadConfig();

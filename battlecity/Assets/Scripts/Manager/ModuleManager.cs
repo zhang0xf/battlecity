@@ -38,7 +38,7 @@ public class ModuleManager
 
     public void RegisterModule(BaseObject obj)
     {
-        Type t = obj.GetType(); // Gets the Type of the current instance.(obj = ◊”¿‡)
+        Type t = obj.GetType(); // Gets the Type of the current instance.(obj = Â≠êÁ±ª)
         string name = t.ToString();
         RegisterModule(name, obj);
     }

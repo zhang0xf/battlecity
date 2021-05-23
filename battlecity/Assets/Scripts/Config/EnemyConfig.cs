@@ -2,6 +2,26 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
+public enum EnemyType : int
+{
+    NONE = -1,
+    BASIC = 1,
+    QUICK = 2,
+    ARMOR = 3,
+    BASIC_STRENGTHEN = 4,
+    QUICK_STRENGTHEN = 5,
+    ARMOR_STRENGTHEN = 6
+}
+
+public class EnemyConfigData
+{
+    public string Form { set; get; }
+    public float Speed { set; get; }
+    public int Health { set; get; }
+    public float Cooling { set; get; }
+    public EnemyType Type { set; get; }
+}
+
 public class EnemyConfig
 {
     private EnemyConfigData data = null;

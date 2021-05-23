@@ -1,58 +1,85 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
     private static Game mInstance = null;
+    private StateMachine stateMachine = null;
 
-    private Game()
-    { 
-        
+    private Game() 
+    {
+        stateMachine = StateMachine.Instance;
     }
 
     public static Game Instance
     {
-        get
-        {
-            if (mInstance == null)
-                mInstance = new Game();
-            return mInstance;
-        }
+        get { return mInstance; }
     }
-
 
     void Awake()
     {
-        Load();
+        Debug.Log("Ê∏∏ÊàèÂêØÂä®ÔºÅ");
+        Init();
+        stateMachine.ChangeState(GameState.LOAD);
+        DontDestroyOnLoad(this);    // this : object that "Game.cs" attached to.
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        UpdateUI();
+    }
+
+    void FixedUpdate()
+    {
+
         
     }
 
-    protected virtual void Load()
-    {
-        Debug.Log("”Œœ∑∆Ù∂Ø£°");
-        LoadModule(typeof(PlayerModule));
 
+    private void Init()
+    {
+        if (null == mInstance)
+        {
+            mInstance = this;
+            // Unity does not allow you to instantiate anything inheriting(ÁªßÊâø) from the MonoBehaviour class using the "new" keyword.
+            // MonoBehaviours are scripts that are attached to an object in the scene, and run in the scene as long as the object they are attached to is active.
+            // The concept of attaching things to objects is Unity specific, while the keyword new is general to C#,
+            // How to specify what to attach it to?
+            // Method : GameObject.AddComponent(). What this does is create a new script, of type T, and add it to the specified GameObject.
+            // MyScript script = new Script();
+            // MyScript script = obj.AddComponent<MyScript>();
+        }
+        Config.LoadConfig();
+        LoadModule(typeof(Player));
     }
 
     private void LoadModule(Type type)
     {
-        BaseObject obj = Activator.CreateInstance(type) as BaseObject;  // Creates an instance of the specified type using the constructor that best matches the specified parameters.
+        // CreateInstance() : Creates an instance of the specified type using the constructor that best matches the specified parameters.
+        BaseObject obj = Activator.CreateInstance(type) as BaseObject;
         obj.Load();
     }
-    
 
+    private void UpdateUI()
+    {
+        Command command = InputHandler.Instance.UIInputHandler();
+        if (null == command) { return; }
+
+        GameObject UIObject = UIManager.Instance.GetLastestUIFromCurrentScene();
+        if (null == UIObject) { return; }
+
+        // Debug.Log(string.Format("Object Name is : {0}", UIObject.name));
+
+        BaseUI baseUI = UIObject.GetComponent<BaseUI>();
+        if (null == baseUI) { return; }
+
+        command.OnExcute(baseUI);
+    }
 }
