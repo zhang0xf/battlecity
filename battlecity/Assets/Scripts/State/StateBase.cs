@@ -7,7 +7,7 @@ public class StateBase
     private GameState mState = GameState.NONE;
     private static Dictionary<GameState, StateBase> dict = null;
 
-    // ¾²Ì¬¹¹Ôìº¯Êı
+    // é™æ€æ„é€ å‡½æ•°
     static StateBase()
     {
         dict = new Dictionary<GameState, StateBase>();
@@ -28,7 +28,7 @@ public class StateBase
     public virtual void AddState(GameState state)
     {
         if (!dict.ContainsKey(state))
-            dict.Add(state, this);  // thisÖ¸Ïòµ÷ÓÃAddState()µÄ¶ÔÏó
+            dict.Add(state, this);  // thisæŒ‡å‘è°ƒç”¨AddState()çš„å¯¹è±¡
     }
 
     public virtual void OnEnter() { }

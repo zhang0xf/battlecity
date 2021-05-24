@@ -8,7 +8,7 @@ public class UIManager
 {
     private static UIManager mInstance = null;
     private static GameObject UICanvas = null;
-    private Dictionary<string, Stack<KeyValuePair<UIType, GameObject>>> UIRecord = null; // µ±Ç°³¡¾°µÄUI¼ÇÂ¼
+    private Dictionary<string, Stack<KeyValuePair<UIType, GameObject>>> UIRecord = null; // å½“å‰åœºæ™¯çš„UIè®°å½•
     private UIPathConfig UIPathData = null;
 
     private UIManager()
@@ -73,7 +73,7 @@ public class UIManager
         UIObject = Object.Instantiate(UIObject, UICanvas.GetComponent<Transform>());
         // Debug.Log(string.Format("UIObject name is {0}", UIObject.name));
 
-        BaseUI baseUI = UIObject.GetComponent<BaseUI>(); // ¶àÌ¬
+        BaseUI baseUI = UIObject.GetComponent<BaseUI>(); // å¤šæ€
         if (null == baseUI) { yield break; }
         
         baseUI.State = ObjectState.READY;

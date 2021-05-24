@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BaseUI : MonoBehaviour
 {
@@ -28,4 +30,6 @@ public class BaseUI : MonoBehaviour
     public virtual void SelectLeft() { }
     
     public virtual void SelectRight() { }
+
+    public virtual void MouseMove() { }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Command
 {
-    // Éè¼ÆÄ£Ê½£ºÃüÁîÄ£Ê½ + ¶àÌ¬
+    // è®¾è®¡æ¨¡å¼ï¼šå‘½ä»¤æ¨¡å¼ + å¤šæ€
     public virtual void OnExcute(Tank tank) { }
     public virtual void OnExcute(BaseUI baseUI) { }
 }
@@ -76,6 +76,15 @@ public class UISelectRight : Command
     public override void OnExcute(BaseUI baseUI)
     {
         baseUI.SelectRight();
+        base.OnExcute(baseUI);
+    }
+}
+
+public class UIMouseMove : Command
+{
+    public override void OnExcute(BaseUI baseUI)
+    {
+        baseUI.MouseMove();
         base.OnExcute(baseUI);
     }
 }
