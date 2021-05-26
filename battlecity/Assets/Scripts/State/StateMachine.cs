@@ -7,7 +7,7 @@ public class StateMachine
 
     private StateMachine()
     {
-        mState = new StateBase();
+        // mState = new StateBase();
     }
 
     public static StateMachine Instance
@@ -34,12 +34,9 @@ public class StateMachine
     {
         switch (state)
         {
-            case GameState.LOAD:
-                Debug.Log(string.Format("Change To Load State."));
-                State = LoadState.Instance;
-                break;
-            case GameState.OPTION:
-
+            case GameState.MIAN_MENU:
+                Debug.Log(string.Format("Change To \"mian_menu\" State."));
+                State = MainMenuState.Instance;
                 break;
             case GameState.START:
 

@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class BaseUI : MonoBehaviour
 {
@@ -18,9 +16,28 @@ public class BaseUI : MonoBehaviour
         OnLoad();
     }
 
+    // UIº”‘ÿ
     protected virtual void OnLoad()
     {
         State = ObjectState.LOADING;
+    }
+
+    // UI‘›Õ£
+    public virtual void OnPause()
+    {
+        State = ObjectState.INVALID;
+    }
+
+    // UI‘›Õ£ª÷∏¥
+    public virtual void OnResume()
+    {
+        State = ObjectState.READY;
+    }
+
+    // UI–∂‘ÿ
+    public virtual void OnRelease()
+    {
+        State = ObjectState.RELEASING;
     }
 
     public virtual void SelectUP() { }
@@ -32,4 +49,6 @@ public class BaseUI : MonoBehaviour
     public virtual void SelectRight() { }
 
     public virtual void MouseMove() { }
+
+    public virtual void Comfirm() { }
 }

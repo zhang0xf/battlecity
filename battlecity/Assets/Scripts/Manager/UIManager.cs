@@ -72,6 +72,7 @@ public class UIManager
         // We Should Assign UIObject with "=". Add a Clone Object to the Dictionary<>!
         UIObject = Object.Instantiate(UIObject, UICanvas.GetComponent<Transform>());
         // Debug.Log(string.Format("UIObject name is {0}", UIObject.name));
+        // ObjectState must be "LOADING" until now.(Awake())
 
         BaseUI baseUI = UIObject.GetComponent<BaseUI>(); // 多态
         if (null == baseUI) { yield break; }

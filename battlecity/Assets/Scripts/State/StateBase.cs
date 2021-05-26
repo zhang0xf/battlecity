@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class StateBase
+public class StateBase : IUpdate
 {
+    protected Command command = null; 
     private GameState mState = GameState.NONE;
     private static Dictionary<GameState, StateBase> dict = null;
 
@@ -31,9 +30,18 @@ public class StateBase
             dict.Add(state, this);  // this指向调用AddState()的对象
     }
 
+    public virtual void UpdateUI() { }
+
+    public virtual void UpdateScene() { }
+
     public virtual void OnEnter() { }
 
     public virtual void OnExcute() { }
 
     public virtual void OnLeave() { }
+
+    public void OnUpdate() 
+    {
+        OnExcute();
+    }
 }

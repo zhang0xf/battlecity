@@ -20,7 +20,7 @@ public class Game : MonoBehaviour
     {
         Debug.Log("游戏启动！");
         Init();
-        stateMachine.ChangeState(GameState.LOAD);
+        stateMachine.ChangeState(GameState.MIAN_MENU);
         DontDestroyOnLoad(this);    // this : object that "Game.cs" attached to.
     }
 
@@ -33,7 +33,10 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateUI();
+        // 状态机自更新
+        stateMachine.State.OnUpdate();
+
+        // 对象自更新
     }
 
     void FixedUpdate()
@@ -65,21 +68,5 @@ public class Game : MonoBehaviour
         // CreateInstance() : Creates an instance of the specified type using the constructor that best matches the specified parameters.
         BaseObject obj = Activator.CreateInstance(type) as BaseObject;
         obj.Load();
-    }
-
-    private void UpdateUI()
-    {
-        Command command = InputHandler.Instance.UIInputHandler();
-        if (null == command) { return; }
-
-        GameObject UIObject = UIManager.Instance.GetLastestUIFromCurrentScene();
-        if (null == UIObject) { return; }
-
-        // Debug.Log(string.Format("Object Name is : {0}", UIObject.name));
-
-        BaseUI baseUI = UIObject.GetComponent<BaseUI>();
-        if (null == baseUI) { return; }
-
-        command.OnExcute(baseUI);
     }
 }

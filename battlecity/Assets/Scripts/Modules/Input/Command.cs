@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Command
 {
     // 设计模式：命令模式 + 多态
@@ -47,7 +45,7 @@ public class UISelectUp : Command
 {
     public override void OnExcute(BaseUI baseUI)
     {
-        Debug.Log(string.Format("enter UISelectUp : OnExcute()"));
+        // Debug.Log(string.Format("enter UISelectUp : OnExcute()"));
         baseUI.SelectUP();
         base.OnExcute(baseUI);
     }
@@ -85,6 +83,15 @@ public class UIMouseMove : Command
     public override void OnExcute(BaseUI baseUI)
     {
         baseUI.MouseMove();
+        base.OnExcute(baseUI);
+    }
+}
+
+public class UIComfirm : Command
+{
+    public override void OnExcute(BaseUI baseUI)
+    {
+        baseUI.Comfirm();
         base.OnExcute(baseUI);
     }
 }

@@ -4,8 +4,9 @@ public enum ObjectState
     INITIAL,
     LOADING,
     READY,
+    INVALID,
     RELEASING,
-    CLOSE
+    CLOSED
 }
 
 public enum RegisterState
@@ -15,11 +16,13 @@ public enum RegisterState
     DONE    // 已注册
 }
 
-public enum GameState   // 游戏状态
+// UI使用栈管理
+// 不使用状态机的原因：状态的切换与UI的选择耦合
+// 那么UI如何使用状态机？
+public enum GameState
 { 
     NONE,
-    LOAD,
-    OPTION,
+    MIAN_MENU,
     START,
     IN_GAME,
     GAME_OVER,
@@ -29,7 +32,8 @@ public enum GameState   // 游戏状态
 public enum UIType : int
 { 
     NONE = 0,
-    GAME_START_UI,
+    MAIN_MENU_UI,
+    SETTING_UI,
 }
 
 // 委托

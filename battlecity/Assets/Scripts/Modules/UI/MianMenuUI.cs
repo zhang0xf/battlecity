@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GameStartUI : BaseUI
+public class MianMenuUI : BaseUI
 {
     private static int defaultIndex = 0;
     private int index = defaultIndex;
@@ -13,11 +12,38 @@ public class GameStartUI : BaseUI
     public Button[] buttons = null; // set from inspector panel
     private EventSystem mEventSystem = null;
 
+    // BaseUI : Awake()
+    // Awake is called when the script instance is being loaded.
+    // Awake is called either when an active GameObject that contains the script is initialized when a Scene loads,
+    // or when a previously inactive GameObject is set to active,
+    // or after a GameObject created with Object.Instantiate is initialized.
+    // Use Awake to initialize variables or states before the application starts.
     protected override void OnLoad()
     {
+        // Debug.Log("MianMenuUI Awake()");
         MessageController.Instance.AddNotification(NotificationName.UI_BUTTON_SELECTED_BY_MOUSE, RecvUIButtonSelectedByMouse);
 
         base.OnLoad();
+    }
+
+    public override void OnPause()
+    {
+        foreach (Button button in buttons)
+        {
+            button.enabled = false;
+        }
+
+        base.OnPause();
+    }
+
+    public override void OnResume()
+    {
+        base.OnResume();
+    }
+
+    public override void OnRelease()
+    {
+        base.OnRelease();
     }
 
     // This function is called when the object(script) becomes enabled and active.
@@ -99,6 +125,35 @@ public class GameStartUI : BaseUI
         base.SelectUP();
     }
 
+    public override void Comfirm()
+    {
+        OnPause();
+
+        switch (currentSelectObject.name)
+        {
+            case "OptionPlayer":
+
+                break;
+            case "OptionPlayers":
+
+                break;
+            case "OptionSetting":
+                UIManager.Instance.OpenUI(UIType.SETTING_UI);
+                break;
+            case "OptionCustomize":
+
+                break;
+            case "OptionOnline":
+
+                break;
+            case "OptionExit":
+
+                break;
+        }
+
+        base.Comfirm();
+    }
+
     private IEnumerator SetButton()
     {
         yield return new WaitForSeconds(0.0f);
@@ -149,5 +204,4 @@ public class GameStartUI : BaseUI
             ++idx;
         }
     }
-
 }

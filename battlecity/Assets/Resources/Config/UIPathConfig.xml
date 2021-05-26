@@ -2,5 +2,6 @@
 
 <root>
 	<UI type = "0" path = ""/>
-	<UI type = "1" path = "Prefabs/UI/GameStartUI"/>
+	<UI type = "1" path = "Prefabs/UI/MainMenuUI"/>
+  <UI type = "2" path = "Prefabs/UI/SettingUI"/>
 </root>

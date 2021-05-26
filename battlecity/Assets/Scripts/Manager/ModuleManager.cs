@@ -1,16 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ModuleManager
 {
     private static ModuleManager mInstance = null;
-    private Dictionary<string, BaseObject> dict = null;
+    private Dictionary<string, BaseObject> moduleDict = null;
+    private Dictionary<string, BaseObject> updateDict = null;
 
     public ModuleManager()
     {
-        dict = new Dictionary<string, BaseObject>();
+        moduleDict = new Dictionary<string, BaseObject>();
+        updateDict = new Dictionary<string, BaseObject>();
     }
 
     public static ModuleManager Instance
@@ -25,15 +25,23 @@ public class ModuleManager
 
     public void RegisterModule(string name, BaseObject obj)
     {
-        if (dict.ContainsKey(name))
-            dict.Remove(name);
-        dict.Add(name, obj);
+        if (moduleDict.ContainsKey(name))
+            moduleDict.Remove(name);
+        moduleDict.Add(name, obj);
+
+        if (obj is IUpdate && !updateDict.ContainsKey(name))
+        {
+            updateDict.Add(name, obj);
+        }
     }
 
     public void UnRegisterModule(string name)
     {
-        if (!dict.ContainsKey(name)) { return; }
-        dict.Remove(name);
+        if (!moduleDict.ContainsKey(name)) { return; }
+        moduleDict.Remove(name);
+
+        if (!updateDict.ContainsKey(name)) { return; }
+        updateDict.Remove(name);
     }
 
     public void RegisterModule(BaseObject obj)
