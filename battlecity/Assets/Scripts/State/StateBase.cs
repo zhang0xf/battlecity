@@ -30,18 +30,16 @@ public class StateBase : IUpdate
             dict.Add(state, this);  // this指向调用AddState()的对象
     }
 
-    public virtual void UpdateUI() { }
+    public virtual void ChangeState() { }
 
-    public virtual void UpdateScene() { }
+    public void OnUpdate()  // 游戏循环
+    {
+        OnExcute();
+    }
 
     public virtual void OnEnter() { }
 
     public virtual void OnExcute() { }
 
     public virtual void OnLeave() { }
-
-    public void OnUpdate() 
-    {
-        OnExcute();
-    }
 }

@@ -16,17 +16,16 @@ public enum RegisterState
     DONE    // 已注册
 }
 
-// UI使用栈管理
-// 不使用状态机的原因：状态的切换与UI的选择耦合
-// 那么UI如何使用状态机？
 public enum GameState
 { 
     NONE,
     MIAN_MENU,
+    SETTING_UI,
+    LOGIN,
     START,
     IN_GAME,
     GAME_OVER,
-    QUIT
+    EXIT
 }
 
 public enum UIType : int

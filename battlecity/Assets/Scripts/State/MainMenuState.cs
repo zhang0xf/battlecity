@@ -26,15 +26,26 @@ public class MainMenuState : StateBase
 
     public override void OnEnter()
     {
-        Debug.Log(string.Format("Enter \"MainMenu State\"."));
+        Debug.Log(string.Format("Enter \"MainMenuState\"."));
         UIManager.Instance.OpenUI(UIType.MAIN_MENU_UI);
         base.OnEnter();
     }
 
+    // BaseUI : OnUpdate() + ∂‡Ã¨
     public override void OnExcute()
     {
-        // Debug.Log("enter MainMenuState : OnExcute()");
-        UpdateUI();
+        command = InputHandler.Instance.UIInputHandler();
+        if (null == command) { return; }
+
+        UIType uIType = UIManager.Instance.GetPeekUIType();
+        if (uIType != UIType.MAIN_MENU_UI) { return; }
+
+        if (command.GetType() == typeof(UIComfirm))
+        {
+            ChangeState();
+        }
+
+        command.OnExcute();
 
         base.OnExcute();
     }
@@ -44,21 +55,21 @@ public class MainMenuState : StateBase
         base.OnLeave();
     }
 
-    public override void UpdateUI()
+    public override void ChangeState()
     {
-        command = InputHandler.Instance.UIInputHandler();
-        if (null == command) { return; }
+        GameObject uiObject = UIManager.Instance.GetPeekUI();
+        if (null == uiObject) { return; }
 
-        GameObject UIObject = UIManager.Instance.GetLastestUIFromCurrentScene();
-        if (null == UIObject) { return; }
+        MainMenuUI mainMenuUI = uiObject.GetComponent<MainMenuUI>();
+        if (null == mainMenuUI) { return; }
 
-        if (!UIObject.name.Equals("MainMenuUI" + "(" + "Clone" + ")")) { return; }
-
-        BaseUI baseUI = UIObject.GetComponent<BaseUI>();
-        if (null == baseUI) { return; }
-
-        command.OnExcute(baseUI);
-
-        base.UpdateUI();
+        if (mainMenuUI.IsOptionSettingSelected())
+            StateMachine.Instance.ChangeState(GameState.SETTING_UI);
+        else if (mainMenuUI.IsOptionPlayerSelected() || mainMenuUI.IsOptionPlayersSelected())
+            StateMachine.Instance.ChangeState(GameState.START);
+        else if (mainMenuUI.IsOptionOnlineSelected())
+            StateMachine.Instance.ChangeState(GameState.LOGIN);
+        else if (mainMenuUI.IsOptionExitSelected())
+            StateMachine.Instance.ChangeState(GameState.EXIT);
     }
 }

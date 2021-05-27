@@ -34,7 +34,7 @@ public class Game : MonoBehaviour
     void Update()
     {
         // 状态机自更新
-        stateMachine.State.OnUpdate();
+        stateMachine.CurrState.OnUpdate();
 
         // 对象自更新
     }

@@ -77,7 +77,7 @@ public class UIManager
         BaseUI baseUI = UIObject.GetComponent<BaseUI>(); // 多态
         if (null == baseUI) { yield break; }
         
-        baseUI.State = ObjectState.READY;
+        baseUI.UIState = ObjectState.READY;
 
         RecordUI(uIType, UIObject);
     }
@@ -104,21 +104,25 @@ public class UIManager
         }
     }
 
-    public GameObject GetLastestUIFromCurrentScene()
+    public UIType GetPeekUIType()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        if (!UIRecord.ContainsKey(scene.name)) { return UIType.NONE; }
+
+        Stack<KeyValuePair<UIType, GameObject>> stack = UIRecord[scene.name];
+        if (null == stack || stack.Count <= 0) { return UIType.NONE; }
+
+        return stack.Peek().Key;
+    }
+
+    public GameObject GetPeekUI()
     {
         Scene scene = SceneManager.GetActiveScene();
         if (!UIRecord.ContainsKey(scene.name)) { return null; }
 
         Stack<KeyValuePair<UIType, GameObject>> stack = UIRecord[scene.name];
-        if (stack.Count <= 0) { return null; }
+        if (null == stack || stack.Count <= 0) { return null; }
 
-        GameObject UiObject = stack.Peek().Value;
-        BaseUI baseUI = UiObject.GetComponent<BaseUI>();
-        if (null == baseUI) { return null; }
-
-        if (baseUI.State != ObjectState.READY) { return null; }
-
-        return UiObject;
+        return stack.Peek().Value;
     }
-
 }

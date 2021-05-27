@@ -1,54 +1,59 @@
 using UnityEngine;
 
+// UI普遍行为可以于基类中继承：OnLoad()、OnPause()、OnResume()、OnRelease()。
+// UI特征行为使用消息而非多态以降低耦合
+
 public class BaseUI : MonoBehaviour
 {
-    protected ObjectState mState;
+    protected ObjectState mUIState;
+    protected GameObject mLastSelectObject = null;
+    protected GameObject mCurrentSelectObject = null;
 
-    public  ObjectState State
+    public ObjectState UIState
     {
-        get { return mState; }
-        set { mState = value; }
+        get { return mUIState; }
+        set { mUIState = value; }
+    }
+
+    public GameObject LastSelectObject
+    {
+        get { return mLastSelectObject; }
+        set { mLastSelectObject = value; }
+    }
+
+    public GameObject CurrentSelectObject
+    {
+        get { return mCurrentSelectObject; }
+        set { mCurrentSelectObject = value; }
     }
 
     private void Awake()
     {
-        State = ObjectState.INITIAL;
+        UIState = ObjectState.INITIAL;
         OnLoad();
     }
 
     // UI加载
     protected virtual void OnLoad()
     {
-        State = ObjectState.LOADING;
+        UIState = ObjectState.LOADING;
     }
 
     // UI暂停
     public virtual void OnPause()
     {
-        State = ObjectState.INVALID;
+        UIState = ObjectState.INVALID;
     }
 
     // UI暂停恢复
     public virtual void OnResume()
     {
-        State = ObjectState.READY;
+        UIState = ObjectState.READY;
     }
 
     // UI卸载
     public virtual void OnRelease()
     {
-        State = ObjectState.RELEASING;
+        UIState = ObjectState.RELEASING;
     }
-
-    public virtual void SelectUP() { }
-    
-    public virtual void SelectDown() { }
-    
-    public virtual void SelectLeft() { }
-    
-    public virtual void SelectRight() { }
-
-    public virtual void MouseMove() { }
-
-    public virtual void Comfirm() { }
 }

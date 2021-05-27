@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class StateMachine
 {
-    private StateBase mState = null;
+    private StateBase mLastState = null;
+    private StateBase mCurrState = null;
     private static StateMachine mInstance = null;
 
     private StateMachine()
@@ -20,14 +21,23 @@ public class StateMachine
         }
     }
 
-    public StateBase State
+    public StateBase CurrState
     {
         set 
         {
-            mState = value;
-            mState.OnEnter();
+            if (mCurrState != value)
+            {
+                mLastState = mCurrState;
+                mCurrState = value;
+                mCurrState.OnEnter();
+            }
         }
-        get { return mState; }
+        get { return mCurrState; }
+    }
+
+    public StateBase LastState
+    {
+        get { return mLastState; }
     }
 
     public void ChangeState(GameState state)
@@ -35,8 +45,12 @@ public class StateMachine
         switch (state)
         {
             case GameState.MIAN_MENU:
-                Debug.Log(string.Format("Change To \"mian_menu\" State."));
-                State = MainMenuState.Instance;
+                Debug.Log(string.Format("Change To \"main_menu\" State."));
+                CurrState = MainMenuState.Instance;
+                break;
+            case GameState.SETTING_UI:
+                Debug.Log(string.Format("Change To \"setting_ui\" State."));
+                CurrState = SettingUIState.Instance;
                 break;
             case GameState.START:
 
@@ -47,7 +61,7 @@ public class StateMachine
             case GameState.GAME_OVER:
 
                 break;
-            case GameState.QUIT:
+            case GameState.EXIT:
 
                 break;
             default:

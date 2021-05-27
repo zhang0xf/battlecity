@@ -9,7 +9,7 @@ public class PointerData : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (eventData.pointerEnter != null)
         {
             // Debug.Log(string.Format("pointerEnter gameobject name : {0}", eventData.pointerEnter.name));
-            Notification na = new Notification(NotificationName.UI_BUTTON_SELECTED_BY_MOUSE, this);
+            Notification na = new Notification(NotificationName.UI_SELECTED_BY_MOUSE, this);
             na.Content = eventData.pointerEnter;
             na.Send();
         }

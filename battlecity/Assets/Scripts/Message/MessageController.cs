@@ -51,19 +51,20 @@ public class MessageController
         }
     }
 
-    public void RemoveNotification(Notification notify, MessageControlHandler handler)
+    public void RemoveNotification(string notifyName, MessageControlHandler handler)
     {
         List<MessageControlHandler> list = null;
-        if (dict.ContainsKey(notify.Name)) 
+        if (dict.ContainsKey(notifyName)) 
         {
-            list = dict[notify.Name];
+            list = dict[notifyName];
             if(list.Contains(handler))
                 list.Remove(handler);
         }
 
         if (list.Count <= 0)
         {
-            dict.Remove(notify.Name);
+            // 不删除list。SendNotification在执行foreach()时list不能为空！
+            // dict.Remove(notifyName);
         }
     }
 
