@@ -8,7 +8,6 @@ public static class Config
         UIPathConfig.Instance.LoadConfig();
         PlayerConfig.Instance.LoadConfig();
         EnemyConfig.Instance.LoadConfig();
-        NotificationConfig.Instance.LoadConfig();
     }
 
     public static XmlDocument LoadXmlConfig(string FilePath)

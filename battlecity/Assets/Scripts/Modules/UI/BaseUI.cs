@@ -1,19 +1,12 @@
 using UnityEngine;
 
-// UI普遍行为可以于基类中继承：OnLoad()、OnPause()、OnResume()、OnRelease()。
-// UI特征行为使用消息而非多态以降低耦合
-
 public class BaseUI : MonoBehaviour
 {
-    protected ObjectState mUIState;
-    protected GameObject mLastSelectObject = null;
-    protected GameObject mCurrentSelectObject = null;
-
-    public ObjectState UIState
-    {
-        get { return mUIState; }
-        set { mUIState = value; }
-    }
+    private GameObject mLastSelectObject = null;
+    private GameObject mCurrentSelectObject = null;
+    private ObjectState mUILastState = ObjectState.NONE;
+    private ObjectState mUICurrState = ObjectState.NONE;
+    private event StateChangedHandler handler = null; // UI状态改变自动同步到UIManager
 
     public GameObject LastSelectObject
     {
@@ -27,33 +20,58 @@ public class BaseUI : MonoBehaviour
         set { mCurrentSelectObject = value; }
     }
 
-    private void Awake()
+    public ObjectState UICurrState
     {
-        UIState = ObjectState.INITIAL;
+        get { return mUICurrState; }
+        set 
+        {
+            if (mUICurrState != value)
+            {
+                mUILastState = mUICurrState;
+                mUICurrState = value;
+                if (handler != null)
+                {
+                    handler(gameObject, mUICurrState, mUILastState);
+                }
+            }
+        }
+    }
+
+    void Awake()
+    {
+        handler += HandleStateChange;
+        UICurrState = ObjectState.INITIAL;
         OnLoad();
     }
 
     // UI加载
     protected virtual void OnLoad()
     {
-        UIState = ObjectState.LOADING;
+        UICurrState = ObjectState.LOADING;
     }
 
     // UI暂停
     public virtual void OnPause()
     {
-        UIState = ObjectState.INVALID;
+        UICurrState = ObjectState.INVALID;
     }
 
     // UI暂停恢复
     public virtual void OnResume()
     {
-        UIState = ObjectState.READY;
+        UICurrState = ObjectState.READY;
     }
 
     // UI卸载
     public virtual void OnRelease()
     {
-        UIState = ObjectState.RELEASING;
+        UICurrState = ObjectState.RELEASING;
+        handler -= HandleStateChange;
+    }
+
+    protected void HandleStateChange(object sender, ObjectState newState, ObjectState oldState)
+    {
+        // Debug.Log("enter HandleStateChange()");
+        UIManager.Instance.SetUIState(sender, newState);
     }
 }

@@ -9,11 +9,13 @@ public class UIManager
     private static UIManager mInstance = null;
     private static GameObject UICanvas = null;
     private Dictionary<string, Stack<KeyValuePair<UIType, GameObject>>> UIRecord = null; // 当前场景的UI记录
+    private Dictionary<object, ObjectState> UIState = null; // UI和UI的状态记录（UI状态改变时自动更新）
     private UIPathConfig UIPathData = null;
 
     private UIManager()
     {
         UIRecord = new Dictionary<string, Stack<KeyValuePair<UIType, GameObject>>>();
+        UIState = new Dictionary<object, ObjectState>();
         UIPathData = UIPathConfig.Instance;
     }
 
@@ -77,7 +79,7 @@ public class UIManager
         BaseUI baseUI = UIObject.GetComponent<BaseUI>(); // 多态
         if (null == baseUI) { yield break; }
         
-        baseUI.UIState = ObjectState.READY;
+        baseUI.UICurrState = ObjectState.READY;
 
         RecordUI(uIType, UIObject);
     }
@@ -124,5 +126,20 @@ public class UIManager
         if (null == stack || stack.Count <= 0) { return null; }
 
         return stack.Peek().Value;
+    }
+
+    public void SetUIState(object obj, ObjectState state)
+    {
+        if (UIState.ContainsKey(obj))
+            UIState.Remove(obj);
+        UIState.Add(obj, state);
+    }
+
+    public ObjectState GetUIState(object obj)
+    {
+        if (UIState.ContainsKey(obj))
+            return UIState[obj];
+        else
+            return ObjectState.NONE;
     }
 }

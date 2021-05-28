@@ -24,10 +24,8 @@ public class InputHandler
             return new UISelectLeft();
         else if (Input.GetKeyDown(KeyCode.RightArrow))
             return new UISelectRight();
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
             return new UIComfirm();
-        else if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
-            return new UIMouseMove();
         return null;
     }
 }

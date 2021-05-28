@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class StateBase : IUpdate
 {
-    protected Command command = null; 
+    private BaseUI mBaseUI = null;
     private GameState mState = GameState.NONE;
+    private Command mCommand = null;
     private static Dictionary<GameState, StateBase> dict = null;
 
     // 静态构造函数
@@ -18,6 +20,18 @@ public class StateBase : IUpdate
         get { return mState; }
     }
 
+    public BaseUI baseUI
+    {
+        set { mBaseUI = value; }
+        get { return mBaseUI; }
+    }
+
+    public Command command
+    {
+        set { mCommand = value; }
+        get { return mCommand; }
+    }
+
     public static StateBase GetState(GameState state)
     {
         if (!dict.ContainsKey(state)) { return null; }
@@ -27,12 +41,24 @@ public class StateBase : IUpdate
     public virtual void AddState(GameState state)
     {
         if (!dict.ContainsKey(state))
-            dict.Add(state, this);  // this指向调用AddState()的对象
+            dict.Add(state, this);
     }
 
-    public virtual void ChangeState() { }
+    protected virtual bool IsUIReady(UIType uIType)
+    {
+        UIType peekType = UIManager.Instance.GetPeekUIType();
+        if (peekType != uIType) { return false; }
 
-    public void OnUpdate()  // 游戏循环
+        GameObject uiObject = UIManager.Instance.GetPeekUI();
+        if (null == uiObject) { return false; }
+
+        ObjectState state = UIManager.Instance.GetUIState(uiObject);
+        if (state != ObjectState.READY) { return false; }
+
+        return true;
+    }
+
+    public void OnUpdate()
     {
         OnExcute();
     }

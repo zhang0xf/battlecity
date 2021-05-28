@@ -4,10 +4,7 @@ public class SettingUIState : StateBase
 {
     private static SettingUIState mInstance = null;
 
-    private SettingUIState()
-    { 
-        
-    }
+    private SettingUIState() { }
 
     public static SettingUIState Instance
     {
@@ -37,6 +34,10 @@ public class SettingUIState : StateBase
 
     public override void OnExcute()
     {
+        if (!IsUIReady(UIType.SETTING_UI)) { return; }
+
+        StateMachine.Instance.ChangeState(GameState.SETTING_UI_AUDIO);
+
         base.OnExcute();
     }
 
@@ -44,12 +45,4 @@ public class SettingUIState : StateBase
     {
         base.OnLeave();
     }
-
-    public override void ChangeState()
-    {
-        base.ChangeState();
-    }
-
-
-
 }

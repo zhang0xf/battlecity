@@ -19,16 +19,9 @@ public class Notification : IEnumerable<KeyValuePair<string, object>>   // IEnum
         set { content = value; }
     }
 
-    // 方案1
     public void Send()
     {
         MessageController.Instance.SendNotification(this);
-    }
-
-    // 方案2
-    public void SendEventActive()
-    {
-        MessageController.Instance.ActiveEventHandler(this);
     }
 
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator()

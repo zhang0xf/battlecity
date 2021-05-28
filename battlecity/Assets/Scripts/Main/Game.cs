@@ -20,7 +20,7 @@ public class Game : MonoBehaviour
     {
         Debug.Log("游戏启动！");
         Init();
-        stateMachine.ChangeState(GameState.MIAN_MENU);
+        stateMachine.ChangeState(GameState.MAIN_MENU);
         DontDestroyOnLoad(this);    // this : object that "Game.cs" attached to.
     }
 
