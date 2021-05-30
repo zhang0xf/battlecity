@@ -1,27 +1,36 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+// 使用MessageController降低四个模块的耦合度：
+// 1. 输入模块：Command
+// 2. GUI模块：BaseUI
+// 3. 状态机模块：StateBase
+// 4. 场景模块：BaseScene
 
 public class Game : MonoBehaviour
 {
     private static Game mInstance = null;
-    private StateMachine stateMachine = null;
-
-    private Game() 
-    {
-        stateMachine = StateMachine.Instance;
-    }
+    private BaseScene mCurrScene = null;
 
     public static Game Instance
     {
         get { return mInstance; }
     }
 
+    public BaseScene CurrScene
+    {
+        set { mCurrScene = value; }
+        get { return mCurrScene; }
+    }
+
     void Awake()
     {
         Debug.Log("游戏启动！");
-        Init();
-        stateMachine.ChangeState(GameState.MAIN_MENU);
-        DontDestroyOnLoad(this);    // this : object that "Game.cs" attached to.
+        Load();
+        StartCoroutine(StartGame());
+        DontDestroyOnLoad(this);// object which "Game.cs" attached to.
     }
 
     // Start is called before the first frame update
@@ -33,20 +42,19 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 状态机自更新
-        stateMachine.CurrState.OnUpdate();
-
-        // 对象自更新
+        // 场景更新
+        if (CurrScene != null)
+        {
+            CurrScene.Update();
+        }
     }
 
     void FixedUpdate()
     {
-
         
     }
 
-
-    private void Init()
+    private void Load()
     {
         if (null == mInstance)
         {
@@ -68,5 +76,37 @@ public class Game : MonoBehaviour
         // CreateInstance() : Creates an instance of the specified type using the constructor that best matches the specified parameters.
         BaseObject obj = Activator.CreateInstance(type) as BaseObject;
         obj.Load();
+    }
+
+    private IEnumerator StartGame()
+    {
+        SceneManager.LoadScene(SceneName.MENU);
+        UIManager.Instance.OpenUI(UIType.MAIN_MENU_UI);
+        yield return null;
+    }
+
+    public void CreateCurrScene(string sceneName, Type type)
+    {
+        StartCoroutine(CreateCurrSceneAsynchronous(sceneName, type));    
+    }
+
+    private IEnumerator CreateCurrSceneAsynchronous(string sceneName, Type type)
+    {
+        string activeName = SceneManager.GetActiveScene().name;
+
+        if (!activeName.Equals(sceneName))
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+
+        if (CurrScene != null)
+        {
+            if (CurrScene.GetType() == type) { yield break; }
+            CurrScene.Release();
+            CurrScene = null;
+        }
+        
+        CurrScene = Activator.CreateInstance(type) as BaseScene;
+        CurrScene.Load();   // CurrState is READY
     }
 }

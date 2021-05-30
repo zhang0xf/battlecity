@@ -2,5 +2,5 @@
 // 需要加入游戏循环的模块继承此接口
 public interface IUpdate
 {
-    void OnUpdate();
+    void Update();
 }

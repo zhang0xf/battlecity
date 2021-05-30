@@ -69,9 +69,18 @@ public class BaseUI : MonoBehaviour
         handler -= HandleStateChange;
     }
 
+    public virtual void RecvSelectUP(Notification notify) { }
+
+    public virtual void RecvSelectDown(Notification notify) { }
+
+    public virtual void RecvSelectLeft(Notification notify) { }
+
+    public virtual void RecvSelectRight(Notification notify) { }
+
+    public virtual void RecvFire(Notification notify) { }
+
     protected void HandleStateChange(object sender, ObjectState newState, ObjectState oldState)
     {
-        // Debug.Log("enter HandleStateChange()");
         UIManager.Instance.SetUIState(sender, newState);
     }
 }

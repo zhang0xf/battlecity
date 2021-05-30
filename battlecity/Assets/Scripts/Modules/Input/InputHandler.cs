@@ -14,18 +14,20 @@ public class InputHandler
         }
     }
 
-    public Command UIInputHandler()
+    public Command HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
-            return new UISelectUp();
+            return new UpCommand();
         else if (Input.GetKeyDown(KeyCode.DownArrow))
-            return new UISelectDown();
+            return new DownCommand();
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            return new UISelectLeft();
+            return new LeftCommand();
         else if (Input.GetKeyDown(KeyCode.RightArrow))
-            return new UISelectRight();
+            return new RightCommand();
         else if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
-            return new UIComfirm();
+            return new FireCommand();
+        else if (Input.GetAxis("Mouse X") > 0 || Input.GetAxis("Mouse Y") > 0)
+            return new MouseMoveCommand();
         return null;
     }
 }

@@ -4,25 +4,19 @@ public class SettingUIState : StateBase
 {
     private static SettingUIState mInstance = null;
 
-    private SettingUIState() { }
+    private SettingUIState()
+    {
+        Status = GameState.SETTING;
+    }
 
     public static SettingUIState Instance
     {
         get
         {
             if (null == mInstance)
-            {
                 mInstance = new SettingUIState();
-                mInstance.AddState(GameState.SETTING_UI);
-            }
             return mInstance;
         }
-    }
-
-
-    public override void AddState(GameState state)
-    {
-        base.AddState(state);
     }
 
     public override void OnEnter()
@@ -34,10 +28,6 @@ public class SettingUIState : StateBase
 
     public override void OnExcute()
     {
-        if (!IsUIReady(UIType.SETTING_UI)) { return; }
-
-        StateMachine.Instance.ChangeState(GameState.SETTING_UI_AUDIO);
-
         base.OnExcute();
     }
 

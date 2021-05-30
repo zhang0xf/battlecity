@@ -19,24 +19,15 @@ public enum RegisterState
 public enum GameState
 { 
     NONE,
-    MAIN_MENU,
-    MAIN_MENU_NEW_GAME,
-    MAIN_MENU_CONTINUE,
-    MAIN_MENU_SETTING,
-    MAIN_MENU_CUSTOMIZE,
-    MAIN_MENU_ONLINE,
-    MAIN_MENU_EXIT,
-    SETTING_UI,
-    SETTING_UI_AUDIO,
-    SETTING_UI_CONTROLLERBIND,
-    SETTING_UI_CONTROLLER,
-    SETTING_UI_KEYBOARDBIND,
-    SETTING_UI_KEYBOARD,
+    MENU,
+    NEW,
+    CONTINUE,
+    SETTING,
+    CUSTOMIZE,
+    ONLINE,
+    START,
     LOGIN,
-    NEW_GAME,
-    CONTINUE_GAME,
-    CUSTOMIZE_GAME,
-    GAME_OVER,
+    GAMEOVER,
     EXIT
 }
 
@@ -45,6 +36,12 @@ public enum UIType : int
     NONE = 0,
     MAIN_MENU_UI,
     SETTING_UI,
+}
+
+public class SceneName
+{
+    public const string START_GAME = "StartGame";
+    public const string MENU = "MainMenu";
 }
 
 // 委托

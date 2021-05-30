@@ -1,61 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class BaseObject
+public class BaseObject : IObject
 {
-    private ObjectState mState;
-    public event StateChangedHandler StateHandler;
-    private RegisterState mRegisterState;  // private : 不可被子类访问，通过转换为父类引用访问！
+    private ObjectState mCurrState = ObjectState.INITIAL;
+    private RegisterState mRegState = RegisterState.NONE;
+    public event StateChangedHandler Handler;
 
-    public BaseObject()
+    public ObjectState CurrState
     {
-        mState = ObjectState.INITIAL;
-        mRegisterState = RegisterState.NONE;
-    }
-
-    public ObjectState State
-    {
-        get { return mState; }
+        get { return mCurrState; }
 
         set
         {
-            if (mState == value)
+            if (mCurrState != value)
             {
-                ObjectState oldState = mState;
-                mState = value;
-                if (StateHandler != null)
-                    StateHandler(this, oldState, mState);
+                ObjectState mLastState = mCurrState;
+                mCurrState = value;
+                if (Handler != null)
+                    Handler(this, mLastState, mCurrState);
             }
         }
     }
 
     public RegisterState RegState
     {
-        get { return mRegisterState; }
-        set
-        {
-            if (mRegisterState.GetType() == value.GetType())
-                mRegisterState = value;
-            else
-                Debug.LogError("Type Error : RegisterState = value");
-        }
+        get { return mRegState; }
+        set { mRegState = value; }
     }
 
-    public void Load()
+    public void Load()  // 接口 + 虚函数
     {
-        if (State != ObjectState.INITIAL) { return; }
-        State = ObjectState.LOADING;
-        RegisterModule(this);
+        if (CurrState != ObjectState.INITIAL) { return; }
+        Handler += HandleStateChange;
+        CurrState = ObjectState.LOADING;
+        RegisterModule(this);   // this : 具体对象
         OnLoad();
     }
 
     protected virtual void OnLoad()
     {
-        State = ObjectState.READY;  // 多态
+        CurrState = ObjectState.READY;
     }
 
     public void Release()
+    {
+        Handler -= HandleStateChange;
+        OnRelease();
+    }
+
+    protected virtual void OnRelease()
     { 
         
     }
@@ -64,8 +55,10 @@ public class BaseObject
     {
         if (RegState == RegisterState.NEED)
         {
-            ModuleManager.Instance.RegisterModule(obj);    // The this keyword refers to the current instance of the class.
+            ModuleManager.Instance.RegisterModule(obj);
             RegState = RegisterState.DONE;
         }
     }
+
+    private void HandleStateChange(object sender, ObjectState newState, ObjectState oldState) { }
 }

@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class UIManager
 {
-    private static UIManager mInstance = null;
     private static GameObject UICanvas = null;
+    private static UIManager mInstance = null;
     private Dictionary<string, Stack<KeyValuePair<UIType, GameObject>>> UIRecord = null; // 当前场景的UI记录
     private Dictionary<object, ObjectState> UIState = null; // UI和UI的状态记录（UI状态改变时自动更新）
     private UIPathConfig UIPathData = null;
@@ -25,18 +25,17 @@ public class UIManager
         {
             if (mInstance == null)
                 mInstance = new UIManager();
-            UpdateCanvas();
             return mInstance;
         }
     }
 
-    private static void UpdateCanvas()
+    public static void UpdateCanvas()
     {
         Scene scene = SceneManager.GetActiveScene();
         if (null == scene) { return; }
 
         UICanvas = GameObject.Find("Canvas");
-        if (null == UICanvas) 
+        if (null == UICanvas)
         {
             UICanvas = new GameObject();
             UICanvas.name = "UIUICanvas";
@@ -62,11 +61,15 @@ public class UIManager
     {
         yield return new WaitForSeconds(0.0f);  // yield return : stop and continue next frame
 
+        if (IsUIReady(uIType)) { yield break; }
+
         string path = UIPathData.GetPathByUIType(uIType);
         if (null == path) { yield break; }
 
         GameObject UIObject = Resources.Load(path) as GameObject;
         if (null == UIObject) { yield break; }
+
+        UpdateCanvas();
 
         // Problem description : I want to Change UI, but can't change it, function() no work?
         // Object.Instantiate(UIObject, UICanvas.GetComponent<Transform>());
@@ -78,7 +81,7 @@ public class UIManager
 
         BaseUI baseUI = UIObject.GetComponent<BaseUI>(); // 多态
         if (null == baseUI) { yield break; }
-        
+
         baseUI.UICurrState = ObjectState.READY;
 
         RecordUI(uIType, UIObject);
@@ -141,5 +144,19 @@ public class UIManager
             return UIState[obj];
         else
             return ObjectState.NONE;
+    }
+
+    public bool IsUIReady(UIType uIType)
+    {
+        UIType peekType = GetPeekUIType();
+        if (peekType != uIType) { return false; }
+
+        GameObject uiObject = GetPeekUI();
+        if (null == uiObject) { return false; }
+
+        ObjectState state = GetUIState(uiObject);
+        if (state != ObjectState.READY) { return false; }
+
+        return true;
     }
 }
