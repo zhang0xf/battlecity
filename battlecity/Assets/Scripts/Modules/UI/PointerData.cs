@@ -13,7 +13,7 @@ public class PointerData : MonoBehaviour, IPointerEnterHandler
         if (eventData.pointerEnter != null)
         {
             // Debug.Log(string.Format("pointerEnter name : {0}", eventData.pointerEnter.name));
-            Notification na = new Notification(NotificationName.UI_POINTER_ENTER, this);
+            Notification na = new Notification(NotificationName.POINTER_ENTER, this);
             na.Content = eventData.pointerEnter;
             na.Send();
         }

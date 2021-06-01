@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class SettingUIState : StateBase
+public class SettingState : StateBase
 {
-    private static SettingUIState mInstance = null;
+    private static SettingState mInstance = null;
 
-    private SettingUIState()
+    private SettingState()
     {
         Status = GameState.SETTING;
     }
 
-    public static SettingUIState Instance
+    public static SettingState Instance
     {
         get
         {
             if (null == mInstance)
-                mInstance = new SettingUIState();
+                mInstance = new SettingState();
             return mInstance;
         }
     }
@@ -33,6 +33,7 @@ public class SettingUIState : StateBase
 
     public override void OnLeave()
     {
+        Debug.Log(string.Format("Leave \"SettingUIState\"."));
         base.OnLeave();
     }
 }

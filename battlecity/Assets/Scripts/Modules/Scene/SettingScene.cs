@@ -1,6 +1,6 @@
-public class MainMenuScene : BaseScene
+public class SettingScene : BaseScene
 {
-    public MainMenuScene()
+    public SettingScene()
     {
         RegState = RegisterState.NONE;
     }
@@ -8,6 +8,7 @@ public class MainMenuScene : BaseScene
     protected override void OnLoad()
     {
         init();
+
         base.OnLoad();
     }
 
@@ -15,10 +16,10 @@ public class MainMenuScene : BaseScene
     {
         mInput = InputHandler.Instance;
         FSM = StateMachine.Instance(this);
-        FSM.CurrState = MainMenuState.Instance;
+        FSM.CurrState = SettingState.Instance;
     }
 
-    public override void OnUpdate() 
+    public override void OnUpdate()
     {
         command = mInput.HandleInput();
         if (null == command) { return; }

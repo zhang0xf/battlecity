@@ -6,7 +6,6 @@ public enum ObjectState
     READY,
     INVALID,
     RELEASING,
-    CLOSED
 }
 
 public enum RegisterState
@@ -25,6 +24,7 @@ public enum GameState
     SETTING,
     CUSTOMIZE,
     ONLINE,
+    BINDKEY,
     START,
     LOGIN,
     GAMEOVER,
@@ -36,6 +36,7 @@ public enum UIType : int
     NONE = 0,
     MAIN_MENU_UI,
     SETTING_UI,
+    BIND_KEY_UI,
 }
 
 public class SceneName

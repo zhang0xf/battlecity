@@ -21,11 +21,14 @@ public class StateMachine : IUpdate
     {
         set 
         {
-            if (mLastState != null) // 允许：mCurrState = value
-                mLastState.OnLeave();
-            mLastState = mCurrState;
-            mCurrState = value;
-            mCurrState.OnEnter();
+            if (mCurrState != value)
+            {
+                if (mLastState != null)
+                    mLastState.OnLeave();
+                mLastState = mCurrState;
+                mCurrState = value;
+                mCurrState.OnEnter();
+            }
         }
         get { return mCurrState; }
     }

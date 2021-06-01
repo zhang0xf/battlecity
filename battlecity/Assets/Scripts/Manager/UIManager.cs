@@ -159,4 +159,33 @@ public class UIManager
 
         return true;
     }
+
+    public void PopUI()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        if (null == scene) { return; }
+
+        Stack<KeyValuePair<UIType, GameObject>> stack = UIRecord[scene.name];
+        if (null == stack || stack.Count <= 0) { return; }
+
+        GameObject currObj = GetPeekUI();
+        if (null == currObj) { return; }
+
+        BaseUI currUI = currObj.GetComponent<BaseUI>(); // 多态
+        if (null == currUI) { return; }
+
+        stack.Pop();
+
+        currUI.OnRelease();
+
+        GameObject forwardObj = GetPeekUI();
+        if (null == forwardObj) { return; }
+
+        if (GetUIState(forwardObj) != ObjectState.INVALID) { return; }
+
+        BaseUI forwardUI = forwardObj.GetComponent<BaseUI>(); // 多态
+        if (null == forwardUI) { return; }
+
+        forwardUI.OnResume();
+    }
 }

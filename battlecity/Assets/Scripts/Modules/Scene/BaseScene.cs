@@ -11,15 +11,8 @@ public class BaseScene : BaseObject, IUpdate
 
     public virtual void OnUpdate() { }
 
-    public virtual void HandleUpCommand() { }
-
-    public virtual void HandleDownCommand() { }
-
-    public virtual void HandleLeftCommand() { }
-
-    public virtual void HandleRightCommand() { }
-
-    public virtual void HandleFireCommand() { }
-
-    public virtual void HandleMouseMoveCommand() { }
+    public void ChangeState(StateBase mState)
+    {
+        FSM.CurrState = mState;
+    }
 }

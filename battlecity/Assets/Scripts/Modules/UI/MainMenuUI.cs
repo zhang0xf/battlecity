@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MainMenuUI : BaseUI
@@ -11,13 +9,12 @@ public class MainMenuUI : BaseUI
     public Button customize = null;
     public Button online = null;
     public Button exit = null;
-    public GameObject Backgroud = null;
 
     private UIType uIType;
-    private EventSystem mEventSystem = null;
     private MainMenuScene mainMenuScene = null; // 场景
-    private Dictionary<GameObject, GameObject> dictUp = null;   // <对象, 上面位置的对象>
-    private Dictionary<GameObject, GameObject> dictDown = null; // <对象，下面位置的对象>
+
+    private Color selectedColor = new Color(1f, 1f, 1f, 40 / 255f);
+    private Color unSelectedColor = new Color(1f, 1f, 1f, 0);
 
     protected override void OnLoad()
     {
@@ -31,11 +28,13 @@ public class MainMenuUI : BaseUI
         init();
         Game.Instance.CreateCurrScene(SceneName.MENU, typeof(MainMenuScene));
 
-        MessageController.Instance.AddNotification(NotificationName.UI_SELECT_UP, RecvSelectUP);
-        MessageController.Instance.AddNotification(NotificationName.UI_SELECT_DOWN, RecvSelectDown);
+        MessageController.Instance.AddNotification(NotificationName.SELECT_UP, RecvSelectUP);
+        MessageController.Instance.AddNotification(NotificationName.SELECT_DOWN, RecvSelectDown);
         MessageController.Instance.AddNotification(NotificationName.MOUSE_MOVE, RecvMouseMove);
-        MessageController.Instance.AddNotification(NotificationName.UI_POINTER_ENTER, RecvPointerEnter);
+        MessageController.Instance.AddNotification(NotificationName.MOUSE_LEFT, RecvMouseLeft);
+        MessageController.Instance.AddNotification(NotificationName.POINTER_ENTER, RecvPointerEnter);
         MessageController.Instance.AddNotification(NotificationName.FIRE, RecvFire);
+        
 
         ResetUI();
 
@@ -44,7 +43,8 @@ public class MainMenuUI : BaseUI
 
     public override void OnPause()
     {
-        CurrentSelectObject.transform.Find("Icon").gameObject.SetActive(false);
+        UnSelectObject(CurrentSelectObject);
+        
         newGame.interactable = false;
         continueGame.interactable = false;
         setting.interactable = false;
@@ -52,11 +52,15 @@ public class MainMenuUI : BaseUI
         online.interactable = false;
         exit.interactable = false;
 
+        RemoveScripts();
+
         base.OnPause();
     }
 
     public override void OnResume()
     {
+        Game.Instance.CreateCurrScene(SceneName.MENU, typeof(MainMenuScene));
+        
         ResetUI();
 
         base.OnResume();
@@ -64,110 +68,123 @@ public class MainMenuUI : BaseUI
 
     public override void OnRelease()
     {
-        MessageController.Instance.RemoveNotification(NotificationName.UI_SELECT_UP, RecvSelectUP);
-        MessageController.Instance.RemoveNotification(NotificationName.UI_SELECT_DOWN, RecvSelectDown);
+        MessageController.Instance.RemoveNotification(NotificationName.SELECT_UP, RecvSelectUP);
+        MessageController.Instance.RemoveNotification(NotificationName.SELECT_DOWN, RecvSelectDown);
         MessageController.Instance.RemoveNotification(NotificationName.MOUSE_MOVE, RecvMouseMove);
-        MessageController.Instance.RemoveNotification(NotificationName.UI_POINTER_ENTER, RecvPointerEnter);
+        MessageController.Instance.RemoveNotification(NotificationName.MOUSE_LEFT, RecvMouseLeft);
+        MessageController.Instance.RemoveNotification(NotificationName.POINTER_ENTER, RecvPointerEnter);
         MessageController.Instance.RemoveNotification(NotificationName.FIRE, RecvFire);
 
-        Destroy(gameObject, 0.0f);  // 延迟0秒
         base.OnRelease();
     }
 
     private void init()
     {
         uIType = UIType.MAIN_MENU_UI;
-        mEventSystem = EventSystem.current; // Fetch the current EventSystem. Make sure your Scene has one.
-        dictUp = new Dictionary<GameObject, GameObject>();
-        dictDown = new Dictionary<GameObject, GameObject>();
-        MappingButton();
+        MakeLogicConnections();
     }
 
     private void ResetUI()
     {
         Cursor.visible = false;
+
         newGame.interactable = true;
         continueGame.interactable = true;
         setting.interactable = true;
         customize.interactable = true;
         online.interactable = true;
         exit.interactable = true;
+
         LastSelectObject = null;
         CurrentSelectObject = newGame.gameObject;
-        CurrentSelectObject.transform.Find("Icon").gameObject.SetActive(true);
-        mEventSystem.SetSelectedGameObject(CurrentSelectObject);
+
+        SelectObject(newGame.gameObject);
+        UnSelectObject(continueGame.gameObject);
+        UnSelectObject(setting.gameObject);
+        UnSelectObject(customize.gameObject);
+        UnSelectObject(online.gameObject);
+        UnSelectObject(exit.gameObject);
     }
 
-    private void MappingButton()
+    private void MakeLogicConnections()
     {
-        List<Button> list = new List<Button>();
-        list.Add(newGame);
-        list.Add(continueGame);
-        list.Add(setting);
-        list.Add(customize);
-        list.Add(online);
-        list.Add(exit);
-        Button[] buttons = list.ToArray();
-
-        for (int idx = 0; idx < buttons.Length; idx++)
-        {
-            Button next = null;
-            Button prev = null;
-            Button current = buttons[idx];
-
-            if (idx != 0)
-                prev = buttons[idx - 1];
-            if (idx != buttons.Length - 1)
-                next = buttons[idx + 1];
-
-            if(prev != null)
-                dictUp.Add(current.gameObject, prev.gameObject);
-            if(next != null)
-                dictDown.Add(current.gameObject, next.gameObject);
-        }
+        MakeUILogicConnections(newGame.gameObject, continueGame.gameObject);
+        MakeUILogicConnections(continueGame.gameObject, setting.gameObject);
+        MakeUILogicConnections(setting.gameObject, customize.gameObject);
+        MakeUILogicConnections(customize.gameObject, online.gameObject);
+        MakeUILogicConnections(online.gameObject, exit.gameObject);
     }
 
-
+    private void ChangeSelect(GameObject obj)
+    {
+        LastSelectObject = CurrentSelectObject;
+        CurrentSelectObject = obj;
+        UnSelectObject(LastSelectObject);
+        SelectObject(CurrentSelectObject);
+    }
 
     private void SelectObject(GameObject obj)
     {
-        Cursor.visible = false;
-        LastSelectObject = CurrentSelectObject;
-        CurrentSelectObject = obj;
-        mEventSystem.SetSelectedGameObject(CurrentSelectObject);
-        LastSelectObject.transform.Find("Icon").gameObject.SetActive(false);
-        CurrentSelectObject.transform.Find("Icon").gameObject.SetActive(true);
+        obj.GetComponent<Image>().color = selectedColor;
+        obj.transform.Find("Icon").gameObject.SetActive(true);
     }
 
-    private void RecvMouseMove(Notification notify)
+    private void UnSelectObject(GameObject obj)
+    {
+        obj.GetComponent<Image>().color = unSelectedColor;
+        obj.transform.Find("Icon").gameObject.SetActive(false);
+    }
+
+    public override void RecvMouseMove(Notification notify)
     {
         Cursor.visible = true;
+        AddScripts();
     }
 
-    private void RecvPointerEnter(Notification notify)
+    private void AddScripts()
+    {
+        newGame.gameObject.AddComponent<PointerData>();
+        continueGame.gameObject.AddComponent<PointerData>();
+        setting.gameObject.AddComponent<PointerData>();
+        customize.gameObject.AddComponent<PointerData>();
+        online.gameObject.AddComponent<PointerData>();
+        exit.gameObject.AddComponent<PointerData>();
+    }
+
+    private void RemoveScripts()
+    {
+        PointerData pointerData = null;
+
+        pointerData = newGame.gameObject.GetComponent<PointerData>();
+        if (pointerData != null) { Destroy(pointerData); }
+
+        pointerData = continueGame.gameObject.GetComponent<PointerData>();
+        if (pointerData != null) { Destroy(pointerData); }
+
+        pointerData = setting.gameObject.GetComponent<PointerData>();
+        if (pointerData != null) { Destroy(pointerData); }
+
+        pointerData = customize.gameObject.GetComponent<PointerData>();
+        if (pointerData != null) { Destroy(pointerData); }
+
+        pointerData = online.gameObject.GetComponent<PointerData>();
+        if (pointerData != null) { Destroy(pointerData); }
+
+        pointerData = exit.gameObject.GetComponent<PointerData>();
+        if (pointerData != null) { Destroy(pointerData); }
+    }
+
+    public override void RecvPointerEnter(Notification notify)
     {
         if (UICurrState != ObjectState.READY || null == notify) { return; }
         
         GameObject obj = (GameObject)notify.Content;
 
-        if (obj == Backgroud) { Cursor.visible = true; return; }
-
         GameObject pointerObject = GetPointerObject(obj);
 
         if (pointerObject == CurrentSelectObject) { return; }
 
-        SelectObject(pointerObject);
-
-        Cursor.visible = true;
-    }
-
-    private GameObject GetPointerObject(GameObject obj)
-    {
-        PointerData pointerData = obj.gameObject.GetComponent<PointerData>();
-        if (null == pointerData)
-            return ExecuteEvents.GetEventHandler<IPointerEnterHandler>(obj);
-
-        return obj;
+        ChangeSelect(pointerObject);
     }
 
     public override void RecvSelectUP(Notification notify)
@@ -179,10 +196,14 @@ public class MainMenuUI : BaseUI
         
         if (mainMenuScene.CurrState != ObjectState.READY) { return; }
 
-        GameObject above = GetAboveObject(CurrentSelectObject);
-        if (null == above) { return; }
+        RemoveScripts();
 
-        SelectObject(above);
+        Cursor.visible = false;
+
+        GameObject up = GetUpConnection(CurrentSelectObject);
+        if (null == up) { return; }
+
+        ChangeSelect(up);
     }
 
     public override void RecvSelectDown(Notification notify)
@@ -194,16 +215,26 @@ public class MainMenuUI : BaseUI
         
         if (mainMenuScene.CurrState != ObjectState.READY) { return; }
 
-        GameObject below = GetBelowObject(CurrentSelectObject);
+        RemoveScripts();
+
+        Cursor.visible = false;
+
+        GameObject below = GetDownConnection(CurrentSelectObject);
         if (null == below) { return; }
 
-        SelectObject(below);
+        ChangeSelect(below);
     }
 
     public override void RecvFire(Notification notify)
     {
+        if (!UIManager.Instance.IsUIReady(uIType)) { return; }
+
         mainMenuScene = Game.Instance.CurrScene as MainMenuScene;
         if (null == mainMenuScene) { return; }
+
+        if (mainMenuScene.CurrState != ObjectState.READY) { return; }
+
+        // RemoveScripts();
 
         if (CurrentSelectObject == newGame.gameObject) 
         {
@@ -223,7 +254,7 @@ public class MainMenuUI : BaseUI
         if (CurrentSelectObject == setting.gameObject)
         {
             OnPause();
-            mainMenuScene.ChangeState(SettingUIState.Instance);
+            mainMenuScene.ChangeState(SettingState.Instance);
         }
         if (CurrentSelectObject == online.gameObject)
         {
@@ -235,21 +266,10 @@ public class MainMenuUI : BaseUI
             OnPause();
             // mainMenuScene.ChangeState();
         }
-        base.RecvFire(notify);
     }
 
-    private GameObject GetAboveObject(GameObject button)
+    public override void RecvMouseLeft(Notification notify)
     {
-        if (dictUp.ContainsKey(button.gameObject))
-            return dictUp[button.gameObject];
-        return null;
+        RecvFire(notify);
     }
-
-    private GameObject GetBelowObject(GameObject button)
-    {
-        if (dictDown.ContainsKey(button.gameObject))
-            return dictDown[button.gameObject];
-        return null;
-    }
-
 }
