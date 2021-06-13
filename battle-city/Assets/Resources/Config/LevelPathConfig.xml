@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+	<Level name = "level0" path = "Prefabs/Level/level0"/>
+	<Level name = "level1" path = "Prefabs/Level/level1"/>
+	<Level name = "level2" path = "Prefabs/Level/level2"/>
+	<Level name = "level3" path = "Prefabs/Level/level3"/>
+</root>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<root>
-	<UI type = "0" path = ""/>
-	<UI type = "1" path = "Prefabs/UI/MainMenuUI"/>
-	<UI type = "2" path = "Prefabs/UI/SettingUI"/>
-	<UI type = "3" path = "Prefabs/UI/BindKeyUI"/>
-</root>
