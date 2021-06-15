@@ -22,11 +22,8 @@ public class MenuState : StateBase
     public override void OnEnter()
     {
         Debug.Log(string.Format("Enter \"MenuState\"."));
-
         UIManager.Instance.Clear();
-
         UIManager.Instance.OpenUI(UIType.MAIN_MENU_UI, false);
-
         base.OnEnter();
     }
 
@@ -38,6 +35,7 @@ public class MenuState : StateBase
     public override void OnLeave()
     {
         Debug.Log(string.Format("Leave \"MenuState\"."));
+        UIManager.Instance.Clear();
         base.OnLeave();
     }
 }

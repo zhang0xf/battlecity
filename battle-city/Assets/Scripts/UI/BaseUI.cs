@@ -35,30 +35,30 @@ public class BaseUI : MonoBehaviour
         OnLoad();
     }
 
-    // UI¼ÓÔØ
+    // UIåŠ è½½
     protected virtual void OnLoad()
     {
         CurrState = ObjState.LOADING;
     }
 
-    // UIÔİÍ£
+    // UIæš‚åœ
     public virtual void OnPause()
     {
         CurrState = ObjState.INVALID;
     }
 
-    // UIÔİÍ£»Ö¸´
+    // UIæš‚åœæ¢å¤
     public virtual void OnResume()
     {
         CurrState = ObjState.READY;
     }
 
-    // UIĞ¶ÔØ
+    // UIå¸è½½
     public virtual void OnRelease()
     {
         CurrState = ObjState.RELEASING;
         handler -= HandleStateChange;
-        Destroy(gameObject, 0.0f);  // ÑÓ³Ù0ÃëÏú»Ù
+        Destroy(gameObject, 0.0f);  // å»¶è¿Ÿ0ç§’é”€æ¯
     }
 
     protected void HandleStateChange(object sender, ObjState newState, ObjState oldState)

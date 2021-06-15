@@ -36,7 +36,7 @@ public class SettingUI : BaseUI
                 // callback
                 // lambda expression
                 // "ctx" is parameter which type is "CallbackContext"
-                // in runtime lambda expression will convert to Action<> or Func<> automatically, to match the Action's or Func's Parameter type.
+                // in runtime lambda expression will convert to Action<> or Func<> or Predicate<> automatically, to match the Action's or Func's or Predicate's Parameter type.
                 // all lambdas can convert to an Action<> or Func<>.
                 if (m_EventSystem.currentSelectedGameObject == m_Audio.gameObject &&
                 m_AudioBind.gameObject.activeSelf)

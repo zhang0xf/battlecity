@@ -4,10 +4,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    // Unity does not allow you to instantiate anything inheriting(继承) from the MonoBehaviour class using the "new" keyword.
-    // MonoBehaviours are scripts that are attached to an object in the scene, and run in the scene as long as the object they are attached to is active.
-    // The concept of attaching things to objects is Unity specific, while the keyword new is general to C#,
-
     public Text m_MessageText;
     public PlayerManager[] m_Players;
 
@@ -20,6 +16,11 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        // Unity does not allow you to instantiate anything inheriting(继承) from the MonoBehaviour class using the "new" keyword.
+        // MonoBehaviours are scripts that are attached to an object in the scene,
+        // and run in the scene as long as the object they are attached to is active.
+        // The concept of attaching things to objects is Unity specific, while the keyword new is general to C#,
+
         if (null == m_Instance)
         {
             m_Instance = this;  // never use new() in MonoBehaviour
@@ -38,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadModule(Type type)
     {
-        //Creates an instance of the specified(指定的) type using the constructor that best matches the specified parameters.
+        // Creates an instance of the specified(指定的) type using the constructor that best matches the specified parameters.
         BaseObject obj = Activator.CreateInstance(type) as BaseObject;
         obj.Load();
     }
