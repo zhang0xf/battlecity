@@ -1,7 +1,9 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.InputSystem.InputAction;
 
 public class MainMenuUI : BaseUI
 {
@@ -12,6 +14,13 @@ public class MainMenuUI : BaseUI
     [SerializeField] private Button m_Online;
     [SerializeField] private Button m_Exit;
 
+    [SerializeField] private AudioClip m_Hit;
+    [SerializeField] private AudioClip m_Fire;
+    [SerializeField] private AudioSource m_AudioSFX;
+    [SerializeField] private AudioMixer m_AudioMixer;
+    [SerializeField] private string m_MusicVolume = "MusicVolume";
+
+    private InputManager m_InputManager;
     private EventSystem m_EventSystem;
 
     // call by BaseUI:Awake()
@@ -19,6 +28,11 @@ public class MainMenuUI : BaseUI
     {
         // make sure scene has an EventSystem!
         m_EventSystem = EventSystem.current;
+
+        m_InputManager = new InputManager();
+
+        // init Start Music Volume
+        m_AudioMixer.SetFloat(m_MusicVolume, PlayerPrefs.GetFloat(m_MusicVolume));
 
         // add listener
         m_NewGame.onClick.AddListener(delegate { NewGameButtonOnClick(); });
@@ -28,11 +42,24 @@ public class MainMenuUI : BaseUI
         m_Online.onClick.AddListener(delegate { OnlineButtonOnClick(); });
         m_Exit.onClick.AddListener(delegate { ExitButtonOnClick(); });
 
+        // lambda 表达式会自动转换为performed对应的Action类型，ctx为参数！
+        m_InputManager.UI.Navigate.performed += ctx => HandleNavigatePerformedEvent(ctx);
+
         StartCoroutine(SetSelect(m_NewGame.gameObject));
 
         m_UIType = UIType.MAIN_MENU_UI;
         MessageController.Instance.AddNotification(NotificationName.POINTER_ENTER, RecvPointerEnter);
         base.OnLoad();
+    }
+
+    private void OnEnable()
+    {
+        m_InputManager.Enable();
+    }
+
+    private void OnDisable()
+    {
+        m_InputManager.Disable();
     }
 
     public override void OnPause()
@@ -68,6 +95,12 @@ public class MainMenuUI : BaseUI
         base.OnRelease();
     }
 
+    private void HandleNavigatePerformedEvent(CallbackContext context)
+    {
+        Debug.Log("Navigate !!!!!!");
+        AudioPlay(m_Hit);
+    }
+
     private void RecvPointerEnter(Notification notify)
     {
         if (CurrState != ObjState.READY || null == notify) { return; }
@@ -84,8 +117,9 @@ public class MainMenuUI : BaseUI
 
         if (null == obj || obj == m_EventSystem.currentSelectedGameObject) { return; }
 
-        m_EventSystem.SetSelectedGameObject(null);
-        m_EventSystem.SetSelectedGameObject(obj);
+        StartCoroutine(SetSelect(obj));
+
+        AudioPlay(m_Hit);
     }
 
     private IEnumerator SetSelect(GameObject obj)
@@ -96,33 +130,46 @@ public class MainMenuUI : BaseUI
         m_EventSystem.SetSelectedGameObject(obj);
     }
 
+    private void AudioPlay(AudioClip clip)
+    {
+        if (null == clip) { return; }
+        m_AudioSFX.clip = clip;
+        m_AudioSFX.Play();
+    }
+
     private void NewGameButtonOnClick()
     {
+        AudioPlay(m_Fire);
         GameManager.Instance.ChangeState(GameState.NEWGAME);
     }
 
     private void ContinueButtonOnClick()
     {
+        AudioPlay(m_Fire);
         GameManager.Instance.ChangeState(GameState.CONTINUE);
     }
 
     private void SettingButtonOnClick()
     {
+        AudioPlay(m_Fire);
         UIManager.Instance.OpenUI(UIType.SETTING_UI, true);
     }
 
     private void CustomizeButtonOnClick()
     {
+        AudioPlay(m_Fire);
         GameManager.Instance.ChangeState(GameState.CUSTOMIZE);
     }
 
     private void OnlineButtonOnClick()
     {
+        AudioPlay(m_Fire);
         GameManager.Instance.ChangeState(GameState.ONLINE);
     }
 
     private void ExitButtonOnClick()
     {
+        AudioPlay(m_Fire);
         // UIManager.Instance.OpenUI(UIType.EXIT_UI, true);
     }
 }

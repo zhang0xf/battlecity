@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -16,7 +16,12 @@ public class SettingUI : BaseUI
     [SerializeField] private GameObject m_ControllerBind;
     [SerializeField] private Button[] m_KeyboardBindArray;
     [SerializeField] private Button[] m_ControllerBindArray;
-
+    [SerializeField] private AudioMixer m_AudioMixer;
+    [SerializeField] private string m_MusicVolume = "MusicVolume";
+    
+    private float m_Multiplier = 30f;
+    private float m_RecordMusicVolume;
+    private float m_RecordSliderValue;
     private EventSystem m_EventSystem;
     private InputManager m_InputyManager;
 
@@ -28,6 +33,10 @@ public class SettingUI : BaseUI
 
         // To use the controls, we need to instantiate them.
         m_InputyManager = new InputManager();
+
+        // get slider value between game session.
+        // onValueChanged has not added!
+        m_Slider.value = PlayerPrefs.GetFloat(m_Slider.name);
 
         // set callback
         m_InputyManager.UI.Submit.performed +=
@@ -89,9 +98,11 @@ public class SettingUI : BaseUI
 
         StartCoroutine(SetSelect(m_Audio.gameObject));
 
-        m_Audio.onValueChanged.AddListener(delegate { SetToggleContent(); });
-        m_Keyboard.onValueChanged.AddListener(delegate { SetToggleContent(); });
-        m_Controller.onValueChanged.AddListener(delegate { SetToggleContent(); });
+        m_Audio.onValueChanged.AddListener(delegate { SetToggleContent(m_AudioBind, m_Audio.isOn); });
+        m_Keyboard.onValueChanged.AddListener(delegate { SetToggleContent(m_KeyboardBind, m_Keyboard.isOn); });
+        m_Controller.onValueChanged.AddListener(delegate { SetToggleContent(m_ControllerBind, m_Controller.isOn); });
+        m_Music.onValueChanged.AddListener(delegate {HandleMusicToggleValueChange(m_Music.isOn); });
+        m_Slider.onValueChanged.AddListener(delegate {HandleAudioSliderValueChange(m_Slider.value); });
 
         m_UIType = UIType.SETTING_UI;
         MessageController.Instance.AddNotification(NotificationName.POINTER_ENTER, RecvPointerEnter);
@@ -105,6 +116,10 @@ public class SettingUI : BaseUI
 
     private void OnDisable()
     {
+        //`PlayerPrefs` is a class that stores Player preferences between game sessions.
+        //It can store string, float and integer values into the user's platform registry.
+        PlayerPrefs.SetFloat(m_MusicVolume, m_RecordMusicVolume);
+        PlayerPrefs.SetFloat(m_Slider.name, m_RecordSliderValue);
         m_InputyManager.Disable();
     }
 
@@ -126,11 +141,32 @@ public class SettingUI : BaseUI
         base.OnRelease();
     }
 
-    private void SetToggleContent()
+    private void SetToggleContent(GameObject obj, bool isOn)
     {
-        m_AudioBind.gameObject.SetActive(m_Audio.isOn);
-        m_KeyboardBind.gameObject.SetActive(m_Keyboard.isOn);
-        m_ControllerBind.gameObject.SetActive(m_Controller.isOn);
+        if (null == obj) { return; }
+        obj.SetActive(isOn);
+    }
+
+    private void HandleMusicToggleValueChange(bool isOn)
+    {
+        if (isOn)
+        {
+            m_Slider.value = m_Slider.maxValue * 0.75f;
+        }
+        else
+        {
+            m_Slider.value = m_Slider.minValue; 
+        }
+    }
+
+    private void HandleAudioSliderValueChange(float value)
+    {
+        Debug.LogFormat("value is {0}", value);
+        m_RecordSliderValue = value;
+        // log10(0) is -infinity(¸ºÎÞÇî), will cause SetFloat() failure. and sound still play.
+        m_RecordMusicVolume = Mathf.Log10(value) * m_Multiplier;
+        m_AudioMixer.SetFloat(m_MusicVolume, m_RecordMusicVolume);
+        m_Music.isOn = value > m_Slider.minValue;
     }
 
     private void RecvPointerEnter(Notification notify)
@@ -151,6 +187,7 @@ public class SettingUI : BaseUI
 
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(obj);
+        Debug.LogFormat("current select obj is {0}", obj.name);
     }
 
     private IEnumerator SetSelect(GameObject obj)
