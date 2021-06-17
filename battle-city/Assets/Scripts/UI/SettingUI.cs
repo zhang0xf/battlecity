@@ -44,66 +44,15 @@ public class SettingUI : BaseUI
         m_Slider.value = PlayerPrefs.GetFloat(m_Slider.name);
 
         // set callback
-        m_InputyManager.UI.Submit.performed +=
-            ctx =>
-            {
-                // callback
-                // lambda expression
-                // "ctx" is parameter which type is "CallbackContext"
-                // in runtime lambda expression will convert to Action<> or Func<> or Predicate<> automatically, to match the Action's or Func's or Predicate's Parameter type.
-                // all lambdas can convert to an Action<> or Func<>.
-                if (m_EventSystem.currentSelectedGameObject == m_Audio.gameObject &&
-                m_AudioBind.gameObject.activeSelf)
-                {
-                    // select right content(slider)
-                    StartCoroutine(SetSelect(m_Slider.gameObject));
-                }
-                else if (m_EventSystem.currentSelectedGameObject == m_Keyboard.gameObject &&
-                m_KeyboardBind.gameObject.activeSelf)
-                {
-                    // select right content(button)
-                    StartCoroutine(SetSelect(m_KeyboardBindArray[0].gameObject));
-                }
-                else if (m_EventSystem.currentSelectedGameObject == m_Controller.gameObject &&
-                m_ControllerBind.gameObject.activeSelf)
-                {
-                    // select right content(button)
-                    StartCoroutine(SetSelect(m_ControllerBindArray[0].gameObject));
-                }
-
-                AudioPlay(m_Fire);
-            };
-
-        // set callback
-        m_InputyManager.UI.Cancel.performed +=
-            ctx =>
-            {
-                if (m_EventSystem.currentSelectedGameObject == m_Slider.gameObject ||
-                m_EventSystem.currentSelectedGameObject == m_Music.gameObject)
-                {
-                    StartCoroutine(SetSelect(m_Audio.gameObject));
-                }
-                else if (IsInArray(m_KeyboardBindArray, m_EventSystem.currentSelectedGameObject))
-                {
-                    StartCoroutine(SetSelect(m_Keyboard.gameObject));
-                }
-                else if (IsInArray(m_ControllerBindArray, m_EventSystem.currentSelectedGameObject))
-                {
-                    StartCoroutine(SetSelect(m_Controller.gameObject));
-                }
-                else if (m_EventSystem.currentSelectedGameObject == m_Audio.gameObject ||
-                m_EventSystem.currentSelectedGameObject == m_Keyboard.gameObject ||
-                m_EventSystem.currentSelectedGameObject == m_Controller.gameObject)
-                {
-                    UIManager.Instance.PopUI(UIType.SETTING_UI);
-                    if (UIManager.Instance.IsResume())
-                    {
-                        UIManager.Instance.ResumeUI(UIManager.Instance.GetPeekUI());
-                    }
-                }
-            };
-
+        // lambda expression( all lambdas can convert to an Action<> or Func<> or Predicate<>)
+        // "ctx" is parameter which type is "CallbackContext"
+        // in runtime lambda expression will convert to Action<> or Func<> or Predicate<> automatically,
+        // to match the Action<> or Func<> or Predicate<>
         m_InputyManager.UI.Navigate.performed += ctx => HandleNavigatePerformedEvent(ctx);
+
+        m_InputyManager.UI.Submit.performed += ctx => HandleSubmitPerformedEvent(ctx);
+
+        m_InputyManager.UI.Cancel.performed += ctx => HandleCancelPerformedEvent(ctx);
 
         StartCoroutine(SetSelect(m_Audio.gameObject));
 
@@ -134,12 +83,16 @@ public class SettingUI : BaseUI
 
     public override void OnPause()
     {
+        m_InputyManager.UI.Navigate.performed -= ctx => HandleNavigatePerformedEvent(ctx);
+        m_InputyManager.Disable();
         MessageController.Instance.RemoveNotification(NotificationName.POINTER_ENTER, RecvPointerEnter);
         base.OnPause();
     }
 
     public override void OnResume()
     {
+        m_InputyManager.UI.Navigate.performed += ctx => HandleNavigatePerformedEvent(ctx);
+        m_InputyManager.Enable();
         MessageController.Instance.AddNotification(NotificationName.POINTER_ENTER, RecvPointerEnter);
         base.OnResume();
     }
@@ -159,13 +112,9 @@ public class SettingUI : BaseUI
     private void HandleMusicToggleValueChange(bool isOn)
     {
         if (isOn)
-        {
             m_Slider.value = m_Slider.maxValue * 0.75f;
-        }
         else
-        {
-            m_Slider.value = m_Slider.minValue; 
-        }
+            m_Slider.value = m_Slider.minValue;
     }
 
     private void HandleAudioSliderValueChange(float value)
@@ -181,6 +130,57 @@ public class SettingUI : BaseUI
     private void HandleNavigatePerformedEvent(CallbackContext context)
     {
         AudioPlay(m_Hit);
+    }
+
+    private void HandleSubmitPerformedEvent(CallbackContext context)
+    {
+        if (m_EventSystem.currentSelectedGameObject == m_Audio.gameObject &&
+                m_AudioBind.gameObject.activeSelf)
+        {
+            // select right content(slider)
+            StartCoroutine(SetSelect(m_Slider.gameObject));
+        }
+        else if (m_EventSystem.currentSelectedGameObject == m_Keyboard.gameObject &&
+        m_KeyboardBind.gameObject.activeSelf)
+        {
+            // select right content(button)
+            StartCoroutine(SetSelect(m_KeyboardBindArray[0].gameObject));
+        }
+        else if (m_EventSystem.currentSelectedGameObject == m_Controller.gameObject &&
+        m_ControllerBind.gameObject.activeSelf)
+        {
+            // select right content(button)
+            StartCoroutine(SetSelect(m_ControllerBindArray[0].gameObject));
+        }
+
+        AudioPlay(m_Fire);
+    }
+
+    private void HandleCancelPerformedEvent(CallbackContext context)
+    {
+        if (m_EventSystem.currentSelectedGameObject == m_Slider.gameObject ||
+                m_EventSystem.currentSelectedGameObject == m_Music.gameObject)
+        {
+            StartCoroutine(SetSelect(m_Audio.gameObject));
+        }
+        else if (IsInArray(m_KeyboardBindArray, m_EventSystem.currentSelectedGameObject))
+        {
+            StartCoroutine(SetSelect(m_Keyboard.gameObject));
+        }
+        else if (IsInArray(m_ControllerBindArray, m_EventSystem.currentSelectedGameObject))
+        {
+            StartCoroutine(SetSelect(m_Controller.gameObject));
+        }
+        else if (m_EventSystem.currentSelectedGameObject == m_Audio.gameObject ||
+        m_EventSystem.currentSelectedGameObject == m_Keyboard.gameObject ||
+        m_EventSystem.currentSelectedGameObject == m_Controller.gameObject)
+        {
+            UIManager.Instance.PopUI(UIType.SETTING_UI);
+            if (UIManager.Instance.IsResume())
+            {
+                UIManager.Instance.ResumeUI(UIManager.Instance.GetPeekUI());
+            }
+        }
     }
 
     private void RecvPointerEnter(Notification notify)
