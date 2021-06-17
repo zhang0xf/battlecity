@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: D-Pad Right
+  m_Text: D-Pad/Right
 --- !u!1 &258263829255202358
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +760,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: D-Pad Up
+  m_Text: D-Pad/Up
 --- !u!1 &1969093746605490132
 GameObject:
   m_ObjectHideFlags: 0
@@ -1286,7 +1286,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: D-Pad Down
+  m_Text: D-Pad/Down
 --- !u!1 &2877674818628346808
 GameObject:
   m_ObjectHideFlags: 0
@@ -2712,6 +2712,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4330328285231161377}
   - component: {fileID: 8726959376733829930}
+  - component: {fileID: 2287121960818140039}
   m_Layer: 5
   m_Name: SettingUI
   m_TagString: Untagged
@@ -2775,8 +2776,107 @@ MonoBehaviour:
   - {fileID: 4222903177684122174}
   - {fileID: 1468833271594535355}
   - {fileID: 8605982510030813584}
+  m_Hit: {fileID: 8300000, guid: a36f2278a85dfc8458b569c2b95bacb6, type: 3}
+  m_Fire: {fileID: 8300000, guid: 4b4363003d904624f89fb930c3522b7e, type: 3}
+  m_AudioSFX: {fileID: 2287121960818140039}
   m_AudioMixer: {fileID: 24100000, guid: e6ee9124e85efaa4fb0a67d16b2f009f, type: 2}
   m_MusicVolume: MusicVolume
+--- !u!82 &2287121960818140039
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4330328285231161374}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 8469553738071359551, guid: e6ee9124e85efaa4fb0a67d16b2f009f, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4374323869568146890
 GameObject:
   m_ObjectHideFlags: 0
@@ -5275,7 +5375,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: D-Pad Left
+  m_Text: D-Pad/Left
 --- !u!1 &7583163810953748734
 GameObject:
   m_ObjectHideFlags: 0

@@ -97,7 +97,6 @@ public class MainMenuUI : BaseUI
 
     private void HandleNavigatePerformedEvent(CallbackContext context)
     {
-        Debug.Log("Navigate !!!!!!");
         AudioPlay(m_Hit);
     }
 

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.InputSystem.InputAction;
 
 public class SettingUI : BaseUI
 {
@@ -16,6 +17,10 @@ public class SettingUI : BaseUI
     [SerializeField] private GameObject m_ControllerBind;
     [SerializeField] private Button[] m_KeyboardBindArray;
     [SerializeField] private Button[] m_ControllerBindArray;
+
+    [SerializeField] private AudioClip m_Hit;
+    [SerializeField] private AudioClip m_Fire;
+    [SerializeField] private AudioSource m_AudioSFX;
     [SerializeField] private AudioMixer m_AudioMixer;
     [SerializeField] private string m_MusicVolume = "MusicVolume";
     
@@ -65,6 +70,8 @@ public class SettingUI : BaseUI
                     // select right content(button)
                     StartCoroutine(SetSelect(m_ControllerBindArray[0].gameObject));
                 }
+
+                AudioPlay(m_Fire);
             };
 
         // set callback
@@ -95,6 +102,8 @@ public class SettingUI : BaseUI
                     }
                 }
             };
+
+        m_InputyManager.UI.Navigate.performed += ctx => HandleNavigatePerformedEvent(ctx);
 
         StartCoroutine(SetSelect(m_Audio.gameObject));
 
@@ -161,12 +170,17 @@ public class SettingUI : BaseUI
 
     private void HandleAudioSliderValueChange(float value)
     {
-        Debug.LogFormat("value is {0}", value);
+        // Debug.LogFormat("value is {0}", value);
         m_RecordSliderValue = value;
         // log10(0) is -infinity(¸ºÎÞÇî), will cause SetFloat() failure. and sound still play.
         m_RecordMusicVolume = Mathf.Log10(value) * m_Multiplier;
         m_AudioMixer.SetFloat(m_MusicVolume, m_RecordMusicVolume);
         m_Music.isOn = value > m_Slider.minValue;
+    }
+
+    private void HandleNavigatePerformedEvent(CallbackContext context)
+    {
+        AudioPlay(m_Hit);
     }
 
     private void RecvPointerEnter(Notification notify)
@@ -187,7 +201,8 @@ public class SettingUI : BaseUI
 
         m_EventSystem.SetSelectedGameObject(null);
         m_EventSystem.SetSelectedGameObject(obj);
-        Debug.LogFormat("current select obj is {0}", obj.name);
+
+        AudioPlay(m_Hit);
     }
 
     private IEnumerator SetSelect(GameObject obj)
@@ -210,5 +225,13 @@ public class SettingUI : BaseUI
             }
         }
         return false;
+    }
+
+    private void AudioPlay(AudioClip clip)
+    {
+        if (null == clip) { return; }
+
+        m_AudioSFX.clip = clip;
+        m_AudioSFX.Play();
     }
 }
