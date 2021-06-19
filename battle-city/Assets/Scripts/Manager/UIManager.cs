@@ -271,6 +271,24 @@ public class UIManager
     public void Clear()
     {
         m_State.Clear();
+
+        Scene scene = SceneManager.GetActiveScene();
+        if (null == scene) { return; }
+
+        if (m_Record.ContainsKey(scene.name))
+        {
+            while (m_Record[scene.name].Count != 0)
+            {
+                GameObject obj = m_Record[scene.name].Pop().Value;
+                if (null == obj) { continue; }
+
+                BaseUI ui = obj.GetComponent<BaseUI>(); // 多态
+                if (null == ui) { continue; }
+
+                ui.OnRelease();
+            }
+        }
+
         m_Record.Clear();
     }
 }

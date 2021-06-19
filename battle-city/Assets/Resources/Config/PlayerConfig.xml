@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-	<player id = "1" comment = "玩家基础形态">
+	<player id = "0" comment = "玩家基础形态">
 		<FORM value_type = "string" value = "basic" comment = "形态名"/>
-		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
+		<SPEED value_type = "float" value = "2.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<SHEILD_TIME value_type = "float" value = "3.0" comment = "护盾持续时间"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</player>
-	<player id = "2" comment = "玩家长炮形态">
+	<player id = "1" comment = "玩家长炮形态">
 		<FORM value_type = "string" value = "long_cannon" comment = "形态名"/>
 		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<SHEILD_TIME value_type = "float" value = "3.0" comment = "护盾持续时间"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</player>
-	<player id = "3" comment = "玩家粗炮形态">
+	<player id = "2" comment = "玩家粗炮形态">
 		<FORM value_type = "string" value = "big_cannon" comment = "形态名"/>
 		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<SHEILD_TIME value_type = "float" value = "3.0" comment = "护盾持续时间"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</player>
-	<player id = "4" comment = "玩家终极形态">
+	<player id = "3" comment = "玩家终极形态">
 		<FORM value_type = "string" value = "ultimate" comment = "形态名"/>
 		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>

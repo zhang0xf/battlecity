@@ -31,6 +31,14 @@ public class EnemyConfig
         }
     }
 
+    public EnemyKind GetEnemyKind(int id)
+    {
+        if (m_Record.ContainsKey(id))
+            return m_Record[id];
+        else
+            return null;
+    }
+
     public void LoadConfig()
     {
         XmlDocument xdoc = Config.LoadXmlConfig("Config/EnemyConfig");

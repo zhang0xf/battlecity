@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIConfig
 {
     private static UIConfig m_Instance = null;
-    private Dictionary<UIType, string> m_Record = null;   // <UIType, UIÂ·¾¶>
+    private Dictionary<UIType, string> m_Record = null;   // <UIType, UIè·¯å¾„>
 
     public UIConfig()
     {

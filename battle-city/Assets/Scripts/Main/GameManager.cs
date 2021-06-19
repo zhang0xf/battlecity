@@ -1,12 +1,24 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public Text m_MessageText;
-    public PlayerManager[] m_Players;
+    [SerializeField] private Text m_MessageText;
+    [SerializeField] private PlayerManager m_PlayerManager;
+    [SerializeField] private GameObject m_PlayerPrefab;
+    [SerializeField] private GameObject[] m_EnemyPrefab;
+    [SerializeField] private Transform[] m_EnemySpawnPoints;
+    [SerializeField] private int m_EnemyCount = 20;
+    [SerializeField] private AudioClip m_StartMusic;
+    [SerializeField] private AudioSource m_AudioSFX;
+    [SerializeField] private Transform EnemyParent;
+    [SerializeField] private GameObject m_Born;
 
+    private int m_RoundNumber = 0;
+    private Queue<EnemyManager> m_Queue;
     private static GameManager m_Instance = null;
     
     public static GameManager Instance
@@ -25,15 +37,22 @@ public class GameManager : MonoBehaviour
         {
             m_Instance = this;  // never use new() in MonoBehaviour
         }
+
+        m_Queue = new Queue<EnemyManager>();
     }
 
     private void Start()
     {
         Debug.Log("游戏启动！");
+
         Config.LoadConfig();
         UIManager.Instance.PreLoadResources();
         LevelManager.Instance.PreLoadResources();
+        SpawnAllTanks();
+        DisablePlayerControl();
+        DisableEnemyControl();
         ChangeState(GameState.MENU);
+
         DontDestroyOnLoad(this);
     }
 
@@ -42,6 +61,123 @@ public class GameManager : MonoBehaviour
         // Creates an instance of the specified(指定的) type using the constructor that best matches the specified parameters.
         BaseObject obj = Activator.CreateInstance(type) as BaseObject;
         obj.Load();
+    }
+
+    public void SpawnAllTanks()
+    {
+        m_PlayerManager.m_PlayerID = 0;
+
+        // create player
+        m_PlayerManager.m_Instance =
+            Instantiate(m_PlayerPrefab, m_PlayerManager.m_SpawnPoint.position, m_PlayerManager.m_SpawnPoint.rotation);
+
+        m_PlayerManager.Setup();
+        m_PlayerManager.m_Instance.SetActive(false);
+
+        // create enemy
+        StartCoroutine(SpawnEnemys());
+    }
+
+    public IEnumerator SpawnEnemys()
+    {
+        for (int i = 0; i <= m_EnemyCount; i++)
+        {
+            m_Queue.Enqueue(CreateEnemy());
+        }
+        yield return null;
+    }
+
+    public EnemyManager CreateEnemy()
+    {
+        EnemyManager enemyManager = new EnemyManager();
+
+        int id = UnityEngine.Random.Range(0, 3);
+
+        // random enemy
+        EnemyKind enemyKind = EnemyConfig.Instance.GetEnemyKind(id);
+        if (null == enemyKind) { return null; }
+
+        enemyManager.m_Form = enemyKind.Form;
+        enemyManager.m_Speed = enemyKind.Speed;
+        enemyManager.m_Cooling = enemyKind.Cooling;
+
+        // random position
+        enemyManager.m_SpawnPoint = m_EnemySpawnPoints[UnityEngine.Random.Range(0, m_EnemySpawnPoints.Length)];
+
+        // random rotation
+        Quaternion rotation =
+            new Quaternion(enemyManager.m_SpawnPoint.rotation.x,
+            enemyManager.m_SpawnPoint.rotation.y,
+            enemyManager.m_SpawnPoint.rotation.z + UnityEngine.Random.Range(0, 4) * 90, 1);
+
+        // Instantiate
+        enemyManager.m_Instance = Instantiate(m_EnemyPrefab[id], enemyManager.m_SpawnPoint.position, rotation, EnemyParent);
+
+        enemyManager.Setup();
+        enemyManager.m_Instance.SetActive(false);
+
+        return enemyManager;
+    }
+
+    public void EnablePlayerControl()
+    {
+        m_PlayerManager.EnableControl();
+    }
+
+    public void DisablePlayerControl()
+    {
+        m_PlayerManager.DisableControl();
+    }
+
+    public void EnableEnemyControl()
+    {
+        foreach(EnemyManager enemyManager in m_Queue)
+        {
+            enemyManager.EnableControl();
+        }
+    }
+
+    public void DisableEnemyControl()
+    {
+        foreach (EnemyManager enemyManager in m_Queue)
+        {
+            enemyManager.DisableControl();
+        }
+    }
+
+    public PlayerManager GetPlayerManager()
+    {
+        return m_PlayerManager;
+    }
+
+    public void PlayStartMusic()
+    {
+        m_AudioSFX.clip = m_StartMusic;
+        m_AudioSFX.Play();
+    }
+
+    public void DisplayMessageText()
+    {
+        m_MessageText.text = "Round " + m_RoundNumber.ToString();
+        m_MessageText.gameObject.SetActive(true);
+    }
+
+    public void UnDisplayMessageText()
+    {
+        m_MessageText.gameObject.SetActive(false);
+    }
+
+    public void BornAnimation(bool isPlay)
+    {
+        if (isPlay)
+        {
+            m_Born = Instantiate(m_Born, m_PlayerManager.m_Instance.transform.position,
+                m_PlayerManager.m_Instance.transform.rotation);
+        }
+        else
+        {
+            Destroy(m_Born, 0.0f);
+        }
     }
 
     public void ChangeState(GameState state)
@@ -54,7 +190,7 @@ public class GameManager : MonoBehaviour
                 StateMachine.Instance.CurrState = MenuState.Instance;
                 break;
             case GameState.NEWGAME:
-                // StateMachine.Instance.CurrState = null;
+                StateMachine.Instance.CurrState = NewGameState.Instance;
                 break;
             case GameState.CONTINUE:
                 // StateMachine.Instance.CurrState = null;

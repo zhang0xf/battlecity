@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelConfig
 {
     private static LevelConfig m_Instance = null;
-    private Dictionary<string, string> m_Record = null;   // <levelÃû×Ö, levelÂ·¾¶>
+    private Dictionary<string, string> m_Record = null;   // <levelåå­—, levelè·¯å¾„>
 
     public LevelConfig()
     {

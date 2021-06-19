@@ -24,10 +24,12 @@ public class StateMachine : IUpdate
         {
             if (m_CurrState != value)
             {
-                if (m_LastState != null)
-                    m_LastState.OnLeave();
                 m_LastState = m_CurrState;
                 m_CurrState = value;
+                if (m_LastState != null)
+                {
+                    m_LastState.OnLeave();
+                }
                 m_CurrState.OnEnter();
             }
         }

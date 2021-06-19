@@ -32,6 +32,14 @@ public class PlayerConfig
         }
     }
 
+    public PlayerStatus GetPlayerStatus(int id)
+    {
+        if (m_Record.ContainsKey(id))
+            return m_Record[id];
+        else
+            return null;
+    }
+
     public void LoadConfig()
     {
         XmlDocument xdoc = Config.LoadXmlConfig("Config/PlayerConfig");

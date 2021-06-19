@@ -113,6 +113,17 @@
                 {
                     "name": "",
                     "id": "7432d099-9b22-4f6f-ba5d-684f6c0397b0",
+                    "path": "<XInputController>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e68220e-3a3f-48a0-879c-3d0fa48ef2cc",
                     "path": "<Gamepad>/dpad",
                     "interactions": "",
                     "processors": "",
