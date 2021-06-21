@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int m_EnemyCount = 20;
     [SerializeField] private AudioClip m_StartMusic;
     [SerializeField] private AudioSource m_AudioSFX;
-    [SerializeField] private Transform EnemyParent;
+    [SerializeField] private Transform m_EnemyParent;
     [SerializeField] private GameObject m_Born;
 
     private int m_RoundNumber = 0;
@@ -44,15 +44,11 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Debug.Log("游戏启动！");
-
         Config.LoadConfig();
         UIManager.Instance.PreLoadResources();
         LevelManager.Instance.PreLoadResources();
         SpawnAllTanks();
-        DisablePlayerControl();
-        DisableEnemyControl();
         ChangeState(GameState.MENU);
-
         DontDestroyOnLoad(this);
     }
 
@@ -61,6 +57,43 @@ public class GameManager : MonoBehaviour
         // Creates an instance of the specified(指定的) type using the constructor that best matches the specified parameters.
         BaseObject obj = Activator.CreateInstance(type) as BaseObject;
         obj.Load();
+    }
+
+    public IEnumerator GameStarting()
+    {
+        DisablePlayerControl();
+
+        // display message
+        m_RoundNumber++;
+        m_MessageText.text = "Round " + m_RoundNumber.ToString();
+        m_MessageText.gameObject.SetActive(true);
+        
+        yield return new WaitForSeconds(2.0f);
+
+        // close message
+        m_MessageText.gameObject.SetActive(false);
+
+        // load level
+        LevelManager.Instance.LoadLevel("level" + m_RoundNumber.ToString());
+
+        // play music 
+        m_AudioSFX.clip = m_StartMusic;
+        m_AudioSFX.Play();
+
+        // play animation
+        m_Born = Instantiate(m_Born, m_PlayerManager.m_Instance.transform.position,
+               m_PlayerManager.m_Instance.transform.rotation);
+        
+        // wait animation complete
+        yield return new WaitForSeconds(4.6f);
+        
+        // close animation
+        Destroy(m_Born, 0.0f);
+
+        // display player
+        m_PlayerManager.m_Instance.SetActive(true);
+
+        EnablePlayerControl();
     }
 
     public void SpawnAllTanks()
@@ -74,8 +107,12 @@ public class GameManager : MonoBehaviour
         m_PlayerManager.Setup();
         m_PlayerManager.m_Instance.SetActive(false);
 
+        DisablePlayerControl();
+
         // create enemy
         StartCoroutine(SpawnEnemys());
+        
+        DisableEnemyControl();
     }
 
     public IEnumerator SpawnEnemys()
@@ -111,7 +148,7 @@ public class GameManager : MonoBehaviour
             enemyManager.m_SpawnPoint.rotation.z + UnityEngine.Random.Range(0, 4) * 90, 1);
 
         // Instantiate
-        enemyManager.m_Instance = Instantiate(m_EnemyPrefab[id], enemyManager.m_SpawnPoint.position, rotation, EnemyParent);
+        enemyManager.m_Instance = Instantiate(m_EnemyPrefab[id], enemyManager.m_SpawnPoint.position, rotation, m_EnemyParent);
 
         enemyManager.Setup();
         enemyManager.m_Instance.SetActive(false);
@@ -148,36 +185,6 @@ public class GameManager : MonoBehaviour
     public PlayerManager GetPlayerManager()
     {
         return m_PlayerManager;
-    }
-
-    public void PlayStartMusic()
-    {
-        m_AudioSFX.clip = m_StartMusic;
-        m_AudioSFX.Play();
-    }
-
-    public void DisplayMessageText()
-    {
-        m_MessageText.text = "Round " + m_RoundNumber.ToString();
-        m_MessageText.gameObject.SetActive(true);
-    }
-
-    public void UnDisplayMessageText()
-    {
-        m_MessageText.gameObject.SetActive(false);
-    }
-
-    public void BornAnimation(bool isPlay)
-    {
-        if (isPlay)
-        {
-            m_Born = Instantiate(m_Born, m_PlayerManager.m_Instance.transform.position,
-                m_PlayerManager.m_Instance.transform.rotation);
-        }
-        else
-        {
-            Destroy(m_Born, 0.0f);
-        }
     }
 
     public void ChangeState(GameState state)

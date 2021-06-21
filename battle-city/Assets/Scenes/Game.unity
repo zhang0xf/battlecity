@@ -216,7 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 547984482}
   m_Layer: 0
-  m_Name: EnemyParent
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -368,15 +368,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
-  m_ActionsAsset: {fileID: -944628639613478452, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_PointAction: {fileID: 7864866779661717168, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_MoveAction: {fileID: -4246835920822275423, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_SubmitAction: {fileID: -721664250509426155, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_CancelAction: {fileID: -1022680087829806908, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_LeftClickAction: {fileID: 8227311138989135757, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_MiddleClickAction: {fileID: -5385772183538369974, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_RightClickAction: {fileID: -6718016371828040636, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
-  m_ScrollWheelAction: {fileID: 1356069849510813428, guid: 9d22c2891e238094b9dfd85c2cea1f83, type: 3}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_PointAction: {fileID: -696930506402640799, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_MoveAction: {fileID: -7251609158699977875, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_SubmitAction: {fileID: 3988821022227828166, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_CancelAction: {fileID: -4334553478358853486, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_LeftClickAction: {fileID: -1243033638299128299, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_MiddleClickAction: {fileID: -1785224020931821889, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_RightClickAction: {fileID: 1308964879513087174, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
+  m_ScrollWheelAction: {fileID: 6727859694838317022, guid: c513bb4fed87a7549ab98e7fe7a02fe7, type: 3}
   m_TrackedDevicePositionAction: {fileID: 0}
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 0
@@ -671,7 +671,7 @@ MonoBehaviour:
   m_EnemyCount: 20
   m_StartMusic: {fileID: 8300000, guid: 17edce2214dd311489c133cdafd09a9a, type: 3}
   m_AudioSFX: {fileID: 1893355854}
-  EnemyParent: {fileID: 547984482}
+  m_EnemyParent: {fileID: 547984482}
   m_Born: {fileID: 522188496135404431, guid: 4c231206b71a68c4c8e85e983b7a219f, type: 3}
 --- !u!82 &1893355853
 AudioSource:

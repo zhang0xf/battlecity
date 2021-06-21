@@ -24,7 +24,7 @@ public class NewGameState : StateBase
     public override void OnEnter()
     {
         Debug.Log(string.Format("Enter \"NewGameState\"."));
-        GameManager.Instance.StartCoroutine(GameStarting());
+        GameManager.Instance.StartCoroutine(GameManager.Instance.GameStarting());
         base.OnEnter();
     }
 
@@ -37,21 +37,5 @@ public class NewGameState : StateBase
     {
         Debug.Log(string.Format("Leave \"NewGameState\"."));
         base.OnLeave();
-    }
-
-    private IEnumerator GameStarting()
-    {
-        GameManager.Instance.DisablePlayerControl();
-        LevelManager.Instance.LoadLevel("level0");
-        GameManager.Instance.DisplayMessageText();
-        yield return new WaitForSeconds(2.0f);
-        GameManager.Instance.PlayStartMusic();
-        GameManager.Instance.UnDisplayMessageText();
-        PlayerManager playerManager = GameManager.Instance.GetPlayerManager();
-        GameManager.Instance.BornAnimation(true);
-        yield return new WaitForSeconds(4.6f);
-        GameManager.Instance.BornAnimation(false);
-        playerManager.m_Instance.SetActive(true);
-        GameManager.Instance.EnablePlayerControl();
     }
 }

@@ -23,7 +23,7 @@ public class MainMenuUI : BaseUI
     [SerializeField] private AudioMixer m_AudioMixer;
     [SerializeField] private string m_MusicVolume = "MusicVolume";
 
-    private InputManager m_InputManager;
+    private InputMaster m_InputManager;
     private InputDevice m_Device;
     private EventSystem m_EventSystem;
 
@@ -33,7 +33,7 @@ public class MainMenuUI : BaseUI
         // make sure scene has an EventSystem!
         m_EventSystem = EventSystem.current;
 
-        m_InputManager = new InputManager();
+        m_InputManager = new InputMaster();
 
         // init Start Music Volume
         m_AudioMixer.SetFloat(m_MusicVolume, PlayerPrefs.GetFloat(m_MusicVolume));

@@ -28,7 +28,7 @@ public class SettingUI : BaseUI
     private float m_RecordMusicVolume;
     private float m_RecordSliderValue;
     private EventSystem m_EventSystem;
-    private InputManager m_InputyManager;
+    private InputMaster m_InputyManager;
 
     // call by BaseUI:Awake()
     protected override void OnLoad()
@@ -37,7 +37,7 @@ public class SettingUI : BaseUI
         m_EventSystem = EventSystem.current;
 
         // To use the controls, we need to instantiate them.
-        m_InputyManager = new InputManager();
+        m_InputyManager = new InputMaster();
 
         // get slider value between game session.
         // onValueChanged has not added!

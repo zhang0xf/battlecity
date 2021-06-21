@@ -10,25 +10,25 @@ public class EnemyManager
     [HideInInspector] public float m_Speed;
     [HideInInspector] public float m_Cooling;
 
-   /* private TankMovement m_Movement;
-    private TankShooting m_Shooting;
-*/
+    private EnemyMovement m_Movement;
+    private EnemyShooting m_Shooting;
+
     public void Setup()
     {
-       /* m_Movement = m_Instance.GetComponent<TankMovement>();
-        m_Shooting = m_Instance.GetComponent<TankShooting>();*/
+        m_Movement = m_Instance.GetComponent<EnemyMovement>();
+        m_Shooting = m_Instance.GetComponent<EnemyShooting>();
     }
 
     public void DisableControl()
     {
-       /* m_Movement.enabled = false;
-        m_Shooting.enabled = false;*/
+        m_Movement.enabled = false;
+        m_Shooting.enabled = false;
     }
 
     public void EnableControl()
     {
-       /* m_Movement.enabled = true;
-        m_Shooting.enabled = true;*/
+        m_Movement.enabled = true;
+        m_Shooting.enabled = true;
     }
 
     public void Reset()
