@@ -5,6 +5,9 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Animator m_Animator;
     [SerializeField] private Rigidbody2D m_Rigidbody;
+    [SerializeField] private AudioClip m_EngineIdle;
+    [SerializeField] private AudioClip m_EngineDriving;
+    [SerializeField] private AudioSource m_AudioDriving;
 
     private bool IsMoving;
 
@@ -30,6 +33,11 @@ public class PlayerMovement : MonoBehaviour
         DOWN,
         LEFT,
         RIGHT
+    }
+
+    private void Awake()
+    {
+        m_AudioDriving.clip = m_EngineIdle;
     }
 
     void FixedUpdate()
@@ -74,6 +82,8 @@ public class PlayerMovement : MonoBehaviour
             }
 
             m_MovementInputValue = new Vector2(0, 0);
+            m_AudioDriving.clip = m_EngineIdle;
+            m_AudioDriving.Play();
         }
         else
         {
@@ -97,6 +107,9 @@ public class PlayerMovement : MonoBehaviour
                 m_Animator.SetBool("Right", move);
                 m_MovementInputValue = new Vector2(1, 0);
             }
+
+            m_AudioDriving.clip = m_EngineDriving;
+            m_AudioDriving.Play();
         }
     }
 

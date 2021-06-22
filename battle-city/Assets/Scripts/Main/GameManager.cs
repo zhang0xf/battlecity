@@ -211,6 +211,9 @@ public class GameManager : MonoBehaviour
             case GameState.EXIT:
                 // StateMachine.Instance.CurrState = null;
                 break;
+            case GameState.GAMEOVER:
+                // StateMachine.Instance.CurrState = null;
+                break;
             default:
                 Debug.Log(string.Format("BaseUI.cs : can't chang to {0} state", state.ToString()));
                 break;

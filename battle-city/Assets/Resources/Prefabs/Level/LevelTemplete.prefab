@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 8354968301324812533}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 6652138089900151111}
   m_Layer: 0
   m_Name: Wall (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 934401930963765544}
   m_Layer: 0
   m_Name: Wall (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 3283211378411775548}
   m_Layer: 0
   m_Name: Barrier
-  m_TagString: Untagged
+  m_TagString: Barrier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -513,7 +513,7 @@ GameObject:
   - component: {fileID: 1439053714248467848}
   m_Layer: 0
   m_Name: Wall (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -622,7 +622,7 @@ GameObject:
   - component: {fileID: 7628615604437698907}
   m_Layer: 0
   m_Name: Home
-  m_TagString: Untagged
+  m_TagString: Home
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 2526300554996879375}
   m_Layer: 0
   m_Name: Wall (4)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -876,7 +876,7 @@ GameObject:
   - component: {fileID: 8545841002735379684}
   m_Layer: 0
   m_Name: BoundaryButtom
-  m_TagString: Untagged
+  m_TagString: Barrier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -985,7 +985,7 @@ GameObject:
   - component: {fileID: 8545841002980108652}
   m_Layer: 0
   m_Name: BoundaryRight
-  m_TagString: Untagged
+  m_TagString: Barrier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1128,7 +1128,7 @@ GameObject:
   - component: {fileID: 8545841003345601918}
   m_Layer: 0
   m_Name: BoundaryLeft
-  m_TagString: Untagged
+  m_TagString: Barrier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1237,7 +1237,7 @@ GameObject:
   - component: {fileID: 8545841003467560770}
   m_Layer: 0
   m_Name: BoundaryTop
-  m_TagString: Untagged
+  m_TagString: Barrier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
