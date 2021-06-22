@@ -3,14 +3,14 @@ using UnityEngine;
 public class BulletHit : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D m_Bullet;
-    [SerializeField] private ParticleSystem m_BulletParticles;
+    [SerializeField] private ParticleSystem m_ExplosionParticles;
     [SerializeField] private AudioSource m_ExplosionAudio;
 
     private ParticleSystem.MainModule mainModule;
 
     private void Awake()
     {
-        mainModule = m_BulletParticles.main;
+        mainModule = m_ExplosionParticles.main;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -18,32 +18,32 @@ public class BulletHit : MonoBehaviour
         if (other.tag == "Barrier")
         {
 
-            m_BulletParticles.transform.parent = null;
+            m_ExplosionParticles.transform.parent = null;
 
             // play particle
-            m_BulletParticles.Play();
+            m_ExplosionParticles.Play();
 
             // play audio
             m_ExplosionAudio.Play();
 
             // destroy particle
-            Destroy(m_BulletParticles.gameObject, mainModule.duration);
+            Destroy(m_ExplosionParticles.gameObject, mainModule.duration);
 
             // destroy bullet
             gameObject.SetActive(false);
         }
         else if (other.tag == "Wall")
         {
-            m_BulletParticles.transform.parent = null;
+            m_ExplosionParticles.transform.parent = null;
 
             // play particle
-            m_BulletParticles.Play();
+            m_ExplosionParticles.Play();
 
             // play audio
             m_ExplosionAudio.Play();
 
             // destroy particle
-            Destroy(m_BulletParticles.gameObject, mainModule.duration);
+            Destroy(m_ExplosionParticles.gameObject, mainModule.duration);
 
             // destroy bullet
             gameObject.SetActive(false);

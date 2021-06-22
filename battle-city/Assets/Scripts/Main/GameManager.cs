@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text m_MessageText;
     [SerializeField] private PlayerManager m_PlayerManager;
     [SerializeField] private GameObject m_PlayerPrefab;
-    [SerializeField] private GameObject[] m_EnemyPrefab;
+    [SerializeField] private GameObject m_EnemyPrefab;
     [SerializeField] private Transform[] m_EnemySpawnPoints;
     [SerializeField] private int m_EnemyCount = 20;
     [SerializeField] private AudioClip m_StartMusic;
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
             enemyManager.m_SpawnPoint.rotation.z + UnityEngine.Random.Range(0, 4) * 90, 1);
 
         // Instantiate
-        enemyManager.m_Instance = Instantiate(m_EnemyPrefab[id], enemyManager.m_SpawnPoint.position, rotation, m_EnemyParent);
+        enemyManager.m_Instance = Instantiate(m_EnemyPrefab, enemyManager.m_SpawnPoint.position, rotation, m_EnemyParent);
 
         enemyManager.Setup();
         enemyManager.m_Instance.SetActive(false);

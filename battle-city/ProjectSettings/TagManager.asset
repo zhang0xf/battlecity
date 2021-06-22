@@ -9,6 +9,8 @@ TagManager:
   - Home
   - Enemy
   - Bullet
+  - Grass
+  - Water
   layers:
   - Default
   - TransparentFX

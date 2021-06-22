@@ -165,19 +165,19 @@ public class PlayerShooting : MonoBehaviour
 
         // get direction by animation info
 
-        if (animStateInfo.IsName("Player1Up") || animStateInfo.IsName("Player1StayUp1"))
+        if (animStateInfo.IsName("PlayerUp"))
         {
             return Direction.UP;
         }
-        else if (animStateInfo.IsName("Player1Left") || animStateInfo.IsName("Player1StayLeft1"))
+        else if (animStateInfo.IsName("PlayerLeft"))
         {
             return Direction.LEFT;
         }
-        else if (animStateInfo.IsName("Player1Down") || animStateInfo.IsName("Player1StayDown1"))
+        else if (animStateInfo.IsName("PlayerDown"))
         {
             return Direction.DOWN;
         }
-        else if (animStateInfo.IsName("Player1Right") || animStateInfo.IsName("Player1StayRight1"))
+        else if (animStateInfo.IsName("PlayerRight"))
         {
             return Direction.RIGHT;
         }

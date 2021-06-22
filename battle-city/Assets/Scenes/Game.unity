@@ -216,7 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 547984482}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: EnemyPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -603,7 +603,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1874746661}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.36, y: 4.5, z: 0}
+  m_LocalPosition: {x: -8.51, y: 4.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -660,10 +660,7 @@ MonoBehaviour:
     m_PlayerID: 0
     m_Instance: {fileID: 0}
   m_PlayerPrefab: {fileID: 7696609056136081083, guid: 2d6221af3017a2744a2e17019c5ddb81, type: 3}
-  m_EnemyPrefab:
-  - {fileID: 7682458458983843879, guid: 0e33c6b3fa2fa794da73b2049f67da40, type: 3}
-  - {fileID: 7682458458983843879, guid: f38076fdc48b0d046bae50b6a0fceb78, type: 3}
-  - {fileID: 7682458458983843879, guid: 3b8054e24f9e67a49aa48ea4d7444825, type: 3}
+  m_EnemyPrefab: {fileID: 7682458458983843879, guid: 0e33c6b3fa2fa794da73b2049f67da40, type: 3}
   m_EnemySpawnPoints:
   - {fileID: 1874746662}
   - {fileID: 1208121157}
