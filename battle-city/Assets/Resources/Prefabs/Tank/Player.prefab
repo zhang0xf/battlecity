@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: -8108406607275698500}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -369,6 +369,7 @@ MonoBehaviour:
   m_BulletRight: {fileID: -5196331759317686300, guid: dd3def6d829632b4aba8c8b678fd83d9, type: 3}
   m_FireClip: {fileID: 8300000, guid: 4b4363003d904624f89fb930c3522b7e, type: 3}
   m_AudioSFX: {fileID: 4052236242027380753}
+  m_ExplosionParticle: {fileID: 4578448064475336098, guid: 8a9d227394abc104697c7ea1dac3743d, type: 3}
   m_FireForce: 8
   m_BulletCount: 20
   m_LifeTime: 8

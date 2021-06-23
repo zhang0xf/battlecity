@@ -36,8 +36,8 @@ public class PlayerShooting : MonoBehaviour
 
     private void Awake()
     {
-        m_Bullets = new Dictionary<Direction, Queue<Rigidbody2D>>();
-        StartCoroutine(GenerateBullets());
+        // m_Bullets = new Dictionary<Direction, Queue<Rigidbody2D>>();
+        // StartCoroutine(GenerateBullets());
     }
 
     private void Update()
@@ -87,6 +87,12 @@ public class PlayerShooting : MonoBehaviour
     {
         if (direction == Direction.NONE) { return null; }
 
+        Rigidbody2D bullet = GetBulletPrefab(direction);
+        if (null == bullet) { return null; }
+        bullet = Instantiate(bullet, m_FirePosition.position, m_FirePosition.rotation, gameObject.transform);
+        return bullet;
+
+#if ABANDON
         if (m_Bullets.ContainsKey(direction))
         {
             Queue<Rigidbody2D> queue = m_Bullets[direction];
@@ -112,10 +118,10 @@ public class PlayerShooting : MonoBehaviour
                 return bullet;
             }
         }
-       
-        return null;
+#endif     
     }
 
+#if ABANDON
     public IEnumerator DestroyBullet(Rigidbody2D bullet, float lifetime)
     {
         if (null == bullet) { yield break; }
@@ -134,6 +140,7 @@ public class PlayerShooting : MonoBehaviour
 
         Destroy(bullet);
     }
+#endif
 
     public IEnumerator Fire()
     {
@@ -149,7 +156,7 @@ public class PlayerShooting : MonoBehaviour
 
         bullet.velocity = movement * m_FireForce;
 
-        StartCoroutine(DestroyBullet(bullet, m_LifeTime));
+        // StartCoroutine(DestroyBullet(bullet, m_LifeTime));
 
         m_AudioSFX.clip = m_FireClip;
         m_AudioSFX.Play();

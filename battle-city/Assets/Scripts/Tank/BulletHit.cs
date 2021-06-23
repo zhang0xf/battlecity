@@ -6,49 +6,37 @@ public class BulletHit : MonoBehaviour
     [SerializeField] private ParticleSystem m_ExplosionParticles;
     [SerializeField] private AudioSource m_ExplosionAudio;
 
+    private float m_LifeTime = 5f;
     private ParticleSystem.MainModule mainModule;
 
     private void Awake()
     {
         mainModule = m_ExplosionParticles.main;
+        Destroy(gameObject, m_LifeTime);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Barrier")
         {
-
             m_ExplosionParticles.transform.parent = null;
 
-            // play particle
             m_ExplosionParticles.Play();
-
-            // play audio
             m_ExplosionAudio.Play();
 
-            // destroy particle
             Destroy(m_ExplosionParticles.gameObject, mainModule.duration);
-
-            // destroy bullet
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
         else if (other.tag == "Wall")
         {
             m_ExplosionParticles.transform.parent = null;
 
-            // play particle
             m_ExplosionParticles.Play();
-
-            // play audio
             m_ExplosionAudio.Play();
 
-            // destroy particle
+            // destroy obj
             Destroy(m_ExplosionParticles.gameObject, mainModule.duration);
-
-            // destroy bullet
-            gameObject.SetActive(false);
-
-            // destroy wall
+            Destroy(gameObject);
             Destroy(other.gameObject);
         }
         else if (other.tag == "Enemy")
