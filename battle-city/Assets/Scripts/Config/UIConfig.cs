@@ -24,10 +24,10 @@ public class UIConfig
 
     public void LoadConfig()
     {
-        XmlDocument xdoc = Config.LoadXmlConfig("Config/UIPathConfig");
+        XmlDocument xdoc = Config.LoadXmlConfig("Config/UIConfig");
         if (null == xdoc)
         {
-            Debug.LogError(string.Format("load error : Config/UIPathConfig"));
+            Debug.LogError(string.Format("load error : Config/UIConfig"));
             return;
         }
 

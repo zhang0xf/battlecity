@@ -8,13 +8,13 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Text m_MessageText;
     [SerializeField] private PlayerManager m_PlayerManager;
+    [SerializeField] private EnemyManager m_EnemyManager;
     [SerializeField] private GameObject m_PlayerPrefab;
     [SerializeField] private GameObject m_EnemyPrefab;
-    [SerializeField] private Transform[] m_EnemySpawnPoints;
     [SerializeField] private int m_EnemyCount = 20;
     [SerializeField] private AudioClip m_StartMusic;
     [SerializeField] private AudioSource m_AudioSFX;
-    [SerializeField] private Transform m_EnemyParent;
+    [SerializeField] private Transform m_EnemyPool;
     [SerializeField] private GameObject m_Born;
 
     private int m_RoundNumber = 0;
@@ -61,57 +61,68 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameStarting()
     {
+        // 禁用操作
         DisablePlayerControl();
+        DisableEnemyControl();
 
-        // display message
+        // 显示回合信息
         m_RoundNumber++;
         m_MessageText.text = "Round " + m_RoundNumber.ToString();
         m_MessageText.gameObject.SetActive(true);
-        
-        yield return new WaitForSeconds(2.0f);
 
-        // close message
+        // 2秒之后关闭信息
+        yield return new WaitForSeconds(2.0f);
         m_MessageText.gameObject.SetActive(false);
 
-        // load level
+        // 加载关卡
         LevelManager.Instance.LoadLevel("level" + m_RoundNumber.ToString());
 
-        // play music 
+        // 播放开始音乐
         m_AudioSFX.clip = m_StartMusic;
         m_AudioSFX.Play();
 
-        // play animation
-        m_Born = Instantiate(m_Born, m_PlayerManager.m_Instance.transform.position,
+        // 获取一个敌人
+        EnemyManager enemyManager = m_Queue.Dequeue();
+        if (null == enemyManager) { yield break; }
+
+        // 播放出生动画
+        GameObject playerBorn = Instantiate(m_Born, m_PlayerManager.m_Instance.transform.position,
                m_PlayerManager.m_Instance.transform.rotation);
-        
-        // wait animation complete
+        GameObject enemyBorn = Instantiate(m_Born, enemyManager.m_Instance.transform.position,
+              enemyManager.m_Instance.transform.rotation);
+
+        // 等待动画播放完成
         yield return new WaitForSeconds(4.6f);
-        
-        // close animation
-        Destroy(m_Born, 0.0f);
+        Destroy(playerBorn, 0.0f);
+        Destroy(enemyBorn, 0.0f);
 
-        // display player
+        // 玩家和敌人设置为可见
         m_PlayerManager.m_Instance.SetActive(true);
+        enemyManager.m_Instance.SetActive(true);
 
+        // 允许操作
         EnablePlayerControl();
+        EnableEnemyControl();
     }
 
     public void SpawnAllTanks()
     {
-        m_PlayerManager.m_PlayerID = 0;
-
-        // create player
+        // 创建玩家
+        m_PlayerManager.m_PlayerLevel = 0;
         m_PlayerManager.m_Instance =
             Instantiate(m_PlayerPrefab, m_PlayerManager.m_SpawnPoint.position, m_PlayerManager.m_SpawnPoint.rotation);
 
+        // 设置玩家
         m_PlayerManager.Setup();
         m_PlayerManager.m_Instance.SetActive(false);
 
+        // 禁用操作
         DisablePlayerControl();
 
-        // create enemy
+        // 创建敌人
         StartCoroutine(SpawnEnemys());
-        
+
+        // 禁用操作
         DisableEnemyControl();
     }
 
@@ -119,72 +130,25 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i <= m_EnemyCount; i++)
         {
-            m_Queue.Enqueue(CreateEnemy());
+            // 随机敌人
+            m_EnemyManager.m_EnemyKind = UnityEngine.Random.Range(0, 3);
+
+            // 随机位置
+            m_EnemyManager.m_SpawnPoint = 
+                m_EnemyManager.m_EnemySpawnPoints[UnityEngine.Random.Range(0, m_EnemyManager.m_EnemySpawnPoints.Length - 1)];
+
+            // 生成敌人
+            m_EnemyManager.m_Instance = 
+                Instantiate(m_EnemyPrefab, m_EnemyManager.m_SpawnPoint.position, m_EnemyManager.m_SpawnPoint.rotation, m_EnemyPool);
+
+            // 设置敌人
+            m_EnemyManager.Setup();
+            m_EnemyManager.m_Instance.SetActive(false);
+
+            m_Queue.Enqueue(m_EnemyManager);
         }
+
         yield return null;
-    }
-
-    public EnemyManager CreateEnemy()
-    {
-        EnemyManager enemyManager = new EnemyManager();
-
-        int id = UnityEngine.Random.Range(0, 3);
-
-        // random enemy
-        EnemyKind enemyKind = EnemyConfig.Instance.GetEnemyKind(id);
-        if (null == enemyKind) { return null; }
-
-        enemyManager.m_Form = enemyKind.Form;
-        enemyManager.m_Speed = enemyKind.Speed;
-        enemyManager.m_Cooling = enemyKind.Cooling;
-
-        // random position
-        enemyManager.m_SpawnPoint = m_EnemySpawnPoints[UnityEngine.Random.Range(0, m_EnemySpawnPoints.Length)];
-
-        // random rotation
-        Quaternion rotation =
-            new Quaternion(enemyManager.m_SpawnPoint.rotation.x,
-            enemyManager.m_SpawnPoint.rotation.y,
-            enemyManager.m_SpawnPoint.rotation.z + UnityEngine.Random.Range(0, 4) * 90, 1);
-
-        // Instantiate
-        enemyManager.m_Instance = Instantiate(m_EnemyPrefab, enemyManager.m_SpawnPoint.position, rotation, m_EnemyParent);
-
-        enemyManager.Setup();
-        enemyManager.m_Instance.SetActive(false);
-
-        return enemyManager;
-    }
-
-    public void EnablePlayerControl()
-    {
-        m_PlayerManager.EnableControl();
-    }
-
-    public void DisablePlayerControl()
-    {
-        m_PlayerManager.DisableControl();
-    }
-
-    public void EnableEnemyControl()
-    {
-        foreach(EnemyManager enemyManager in m_Queue)
-        {
-            enemyManager.EnableControl();
-        }
-    }
-
-    public void DisableEnemyControl()
-    {
-        foreach (EnemyManager enemyManager in m_Queue)
-        {
-            enemyManager.DisableControl();
-        }
-    }
-
-    public PlayerManager GetPlayerManager()
-    {
-        return m_PlayerManager;
     }
 
     public void ChangeState(GameState state)
@@ -218,5 +182,27 @@ public class GameManager : MonoBehaviour
                 Debug.Log(string.Format("BaseUI.cs : can't chang to {0} state", state.ToString()));
                 break;
         }
+    }
+
+    public void EnablePlayerControl()
+    {
+        m_PlayerManager.EnableControl();
+    }
+
+    public void DisablePlayerControl()
+    {
+        m_PlayerManager.DisableControl();
+    }
+
+    public void EnableEnemyControl()
+    {
+        foreach (EnemyManager enemyManager in m_Queue)
+            enemyManager.EnableControl();
+    }
+
+    public void DisableEnemyControl()
+    {
+        foreach (EnemyManager enemyManager in m_Queue)
+            enemyManager.DisableControl();
     }
 }

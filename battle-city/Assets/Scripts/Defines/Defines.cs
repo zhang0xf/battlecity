@@ -1,3 +1,4 @@
+// 对象状态
 public enum ObjState
 { 
     NONE,
@@ -8,6 +9,7 @@ public enum ObjState
     RELEASING,
 }
 
+// 对象是否注册
 public enum RegisterState
 { 
     NONE,   // 不需要注册
@@ -15,7 +17,7 @@ public enum RegisterState
     DONE    // 已注册
 }
 
-
+// 游戏状态
 public enum GameState
 { 
     NONE,
@@ -30,6 +32,7 @@ public enum GameState
     EXIT
 }
 
+// UI
 public enum UIType : int
 { 
     NONE = 0,
@@ -37,7 +40,19 @@ public enum UIType : int
     SETTING_UI,
 }
 
+// 坦克方向
+public enum Direction
+{
+    NONE,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+}
+
 // 委托
 public delegate void MessageControlHandler(Notification notify);
 
 public delegate void StateChangedHandler(object sender, ObjState newState, ObjState oldState);
+
+public delegate void TankMove();

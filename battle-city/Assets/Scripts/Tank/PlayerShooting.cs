@@ -15,7 +15,6 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private AudioSource m_AudioSFX;
     [SerializeField] private float m_FireForce = 8.0f;
     [SerializeField] private int m_BulletCount = 20;
-    [SerializeField] private float m_LifeTime = 8.0f;
 
     private Dictionary<Direction, Queue<Rigidbody2D>> m_Bullets;
 
@@ -23,16 +22,7 @@ public class PlayerShooting : MonoBehaviour
     private bool m_FireButtonPressedThisFrame;
     private bool m_FireButtonReleasedThisFrame;
 
-    private PlayerStatus m_PlayerStatus;
-
-    private enum Direction
-    {
-        NONE,
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
+    private TankInfo m_PlayerInfo;
 
     private void Awake()
     {
@@ -161,7 +151,7 @@ public class PlayerShooting : MonoBehaviour
         m_AudioSFX.clip = m_FireClip;
         m_AudioSFX.Play();
 
-        yield return new WaitForSeconds(m_PlayerStatus.Cooling);
+        yield return new WaitForSeconds(m_PlayerInfo.Cooling);
 
         IsFiring = false;
     }
@@ -212,9 +202,9 @@ public class PlayerShooting : MonoBehaviour
         return new Vector2(0, 0);
     }
 
-    public void SetPlayerStatus(int id)
+    public void SetPlayerInfo(int level)
     {
-        m_PlayerStatus = PlayerConfig.Instance.GetPlayerStatus(id);
+        m_PlayerInfo = TankConfig.Instance.GetPlayerInfo(level);
     }
 
     private void OnFire(InputValue value)

@@ -24,10 +24,10 @@ public class LevelConfig
 
     public void LoadConfig()
     {
-        XmlDocument xdoc = Config.LoadXmlConfig("Config/LevelPathConfig");
+        XmlDocument xdoc = Config.LoadXmlConfig("Config/LevelConfig");
         if (null == xdoc)
         {
-            Debug.LogError(string.Format("load error : Config/LevelPathConfig"));
+            Debug.LogError(string.Format("load error : Config/LevelConfig"));
             return;
         }
 

@@ -44,7 +44,7 @@ public class SettingUI : BaseUI
         m_Slider.value = PlayerPrefs.GetFloat(m_Slider.name);
 
         // set callback
-        // lambda expression( all lambdas can convert to an Action<> or Func<> or Predicate<>)
+        // lambda expression(all lambdas can convert to an Action<> or Func<> or Predicate<>)
         // "ctx" is parameter which type is "CallbackContext"
         // in runtime lambda expression will convert to Action<> or Func<> or Predicate<> automatically,
         // to match the Action<> or Func<> or Predicate<>

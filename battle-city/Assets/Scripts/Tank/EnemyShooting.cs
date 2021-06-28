@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour
 {
-    private EnemyKind m_EnemyKind;
+    private TankInfo m_EnemyInfo;
 
-
-
-    public void SetEnemyKind(int id)
+    public void SetEnemyInfo(int kind)
     {
-        m_EnemyKind = EnemyConfig.Instance.GetEnemyKind(id);
+        m_EnemyInfo = TankConfig.Instance.GetEnemyInfo(kind);
     }
 }

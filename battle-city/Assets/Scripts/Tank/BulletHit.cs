@@ -6,7 +6,7 @@ public class BulletHit : MonoBehaviour
     [SerializeField] private ParticleSystem m_ExplosionParticles;
     [SerializeField] private AudioSource m_ExplosionAudio;
 
-    private float m_LifeTime = 5f;
+    private float m_LifeTime = 5f;  // 子弹存在时间
     private ParticleSystem.MainModule mainModule;
 
     private void Awake()
@@ -34,7 +34,6 @@ public class BulletHit : MonoBehaviour
             m_ExplosionParticles.Play();
             m_ExplosionAudio.Play();
 
-            // destroy obj
             Destroy(m_ExplosionParticles.gameObject, mainModule.duration);
             Destroy(gameObject);
             Destroy(other.gameObject);

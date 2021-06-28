@@ -6,9 +6,8 @@ public static class Config
     public static void LoadConfig()
     {
         UIConfig.Instance.LoadConfig();
+        TankConfig.Instance.LoadConfig();
         LevelConfig.Instance.LoadConfig();
-        PlayerConfig.Instance.LoadConfig();
-        EnemyConfig.Instance.LoadConfig();
     }
 
     public static XmlDocument LoadXmlConfig(string FilePath)

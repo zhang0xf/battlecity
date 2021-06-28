@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public class PlayerManager
 {
     public Transform m_SpawnPoint;
-    [HideInInspector] public int m_PlayerID;
+    [HideInInspector] public int m_PlayerLevel;
     [HideInInspector] public GameObject m_Instance;
 
     private PlayerMovement m_Movement;
@@ -17,8 +15,8 @@ public class PlayerManager
     {
         m_Movement = m_Instance.GetComponent<PlayerMovement>();
         m_Shooting = m_Instance.GetComponent<PlayerShooting>();
-        m_Movement.SetPlayerStatus(m_PlayerID);
-        m_Shooting.SetPlayerStatus(m_PlayerID);
+        m_Movement.SetPlayerInfo(m_PlayerLevel);
+        m_Shooting.SetPlayerInfo(m_PlayerLevel);
     }
 
     public void DisableControl()

@@ -627,18 +627,22 @@ MonoBehaviour:
   m_MessageText: {fileID: 1129945500}
   m_PlayerManager:
     m_SpawnPoint: {fileID: 2040355287}
-    m_PlayerID: 0
+    m_PlayerLevel: 0
     m_Instance: {fileID: 0}
+  m_EnemyManager:
+    m_EnemySpawnPoints:
+    - {fileID: 1874746662}
+    - {fileID: 1208121157}
+    - {fileID: 1167758957}
+    m_SpawnPoint: {fileID: 0}
+    m_Instance: {fileID: 0}
+    m_EnemyKind: 0
   m_PlayerPrefab: {fileID: 7696609056136081083, guid: 2d6221af3017a2744a2e17019c5ddb81, type: 3}
   m_EnemyPrefab: {fileID: 7682458458983843879, guid: 0e33c6b3fa2fa794da73b2049f67da40, type: 3}
-  m_EnemySpawnPoints:
-  - {fileID: 1874746662}
-  - {fileID: 1208121157}
-  - {fileID: 1167758957}
   m_EnemyCount: 20
   m_StartMusic: {fileID: 8300000, guid: 17edce2214dd311489c133cdafd09a9a, type: 3}
   m_AudioSFX: {fileID: 1893355854}
-  m_EnemyParent: {fileID: 547984482}
+  m_EnemyPool: {fileID: 547984482}
   m_Born: {fileID: 522188496135404431, guid: 4c231206b71a68c4c8e85e983b7a219f, type: 3}
 --- !u!82 &1893355853
 AudioSource:

@@ -23,17 +23,8 @@ public class PlayerMovement : MonoBehaviour
     private bool IsRightPressedThisFrame;
     private bool IsRightReleasedThisFrame = true;
 
-    private PlayerStatus m_PlayerStatus;
+    private TankInfo m_PlayerInfo;
     private Vector2 m_MovementInputValue;
-
-    private enum Direction
-    { 
-        NONE,
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
 
     private void Awake()
     {
@@ -47,13 +38,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        Vector2 movement = m_MovementInputValue * m_PlayerStatus.Speed * Time.deltaTime;
+        Vector2 movement = m_MovementInputValue * m_PlayerInfo.Speed * Time.deltaTime;
         m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
     }
 
-    public void SetPlayerStatus(int id)
+    public void SetPlayerInfo(int level)
     {
-        m_PlayerStatus = PlayerConfig.Instance.GetPlayerStatus(id);
+        m_PlayerInfo = TankConfig.Instance.GetPlayerInfo(level);
     }
 
     private void SetMove(bool move, Direction direction)
