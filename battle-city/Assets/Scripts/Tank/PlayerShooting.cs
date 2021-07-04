@@ -13,7 +13,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Rigidbody2D m_BulletRight;
     [SerializeField] private AudioClip m_FireClip;
     [SerializeField] private AudioSource m_AudioSFX;
-    [SerializeField] private float m_FireForce = 8.0f;
+    [SerializeField] private float m_FireForce = 24.0f;
     [SerializeField] private int m_BulletCount = 20;
 
     private Dictionary<Direction, Queue<Rigidbody2D>> m_Bullets;

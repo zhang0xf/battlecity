@@ -21,7 +21,6 @@ public class TankConfig
 
     private TankConfig()
     {
-        m_Info = new TankInfo();
         m_Player = new Dictionary<int, TankInfo>();
         m_Enemy = new Dictionary<int, TankInfo>();
     }
@@ -70,6 +69,8 @@ public class TankConfig
         foreach (XmlElement element in list)
         {
             if (!element.HasChildNodes) continue;
+
+            m_Info = new TankInfo();
 
             if (element.Name.Equals("player"))
             {

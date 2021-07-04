@@ -242,7 +242,7 @@ public class Condition_IsSeeEnemy : Condition
 
         // RaycastHit2D result = Physics2D.Raycast(gameObject.transform.position );
 
-        return BStatus.SUCCESS;
+        return BStatus.FAILURE;
     }
 }
 
@@ -277,6 +277,8 @@ public class PatrolAction : Action
         if (null == gameObject) { return BStatus.INVALID; }
 
         Debug.LogFormat("{0} begin PatrolAction", gameObject.name);
+
+        // Debug.DrawRay()
 
         return BStatus.SUCCESS;
     }
