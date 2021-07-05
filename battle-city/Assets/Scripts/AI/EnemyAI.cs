@@ -34,7 +34,7 @@ public class EnemyAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // BT.Tick(gameObject, m_Level);
+        BT.Tick(gameObject, m_Level);
     }
 
     private void RecvLevelChange(Notification notify)

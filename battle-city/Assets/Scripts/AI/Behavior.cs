@@ -278,19 +278,21 @@ public class CalculatePathAction : Action
     {
         if (null == tank || null == level) { return BStatus.INVALID; }
 
-        SquareGridManager grid = level.GetComponent<SquareGridManager>();
-        if (null == grid) { return BStatus.FAILURE; }
+        SquareGridManager squareGridManager = level.GetComponent<SquareGridManager>();
+        if (null == squareGridManager) { return BStatus.FAILURE; }
 
         EnemyMovement move = tank.GetComponent<EnemyMovement>();
+        if (null == move) { return BStatus.FAILURE; }
+
+        SquareGrid grid = squareGridManager.grid;
         if (null == grid) { return BStatus.FAILURE; }
 
-        // Location location = new Location(tank.transform.position.x, tank.transform.position.y);
+        Location location = grid.WorldToSquareGrid(new Vector2(tank.transform.position.x, tank.transform.position.y));
 
-/*        move.m_Path = grid.BreadthFirstSearch(location);
+        move.m_Path = GridAlgorithm.BreadthFirstSearch(grid, location);
+
         if (move.m_Path.Count != 0)
-        {
             return BStatus.SUCCESS;
-        }*/
         return BStatus.FAILURE;
     }
 }
@@ -315,8 +317,7 @@ public class PatrolAction : Action
 
         if (move.m_Path.Count != 0)
         {
-            // grid.StartCoroutine(grid.ShowHighlight(new Location(0, 0)));
-
+            Debug.LogFormat("find grid count :{0}", move.m_Path.Count);
             move.m_Path.Clear();
         }
 

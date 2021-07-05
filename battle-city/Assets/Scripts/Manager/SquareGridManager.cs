@@ -19,6 +19,7 @@ public class Location : IEquatable<Location>
         return x.GetHashCode() + y.GetHashCode();
     }
 
+    // Location 会被比较，所以需要实现此类接口
     public override bool Equals(object obj)
     {
         return Equals(obj as Location);
@@ -75,9 +76,9 @@ public class SquareGrid
     private bool InBounds(Location location)
     {
         return  (location.x >= -width)  &&
-                (location.x <= width)   &&
+                (location.x < width)   &&
                 (location.y >= -height) &&
-                (location.x <= height);
+                (location.y < height);
     }
 
     public bool AddWall(Location location)
@@ -144,9 +145,12 @@ public class SquareGrid
         foreach (var direction in m_Direction)
         {
             Location next = new Location(location.x + direction.Value.x, location.y + direction.Value.y);
-            if (InBounds(next) && !IsWall(next) && !IsBarrier(next))
+            if (InBounds(next))
             {
-                list.Add(next);
+                if (!IsWall(next) && !IsBarrier(next))
+                {
+                    list.Add(next);
+                }
             }
         }
 
@@ -166,9 +170,9 @@ public class SquareGridManager : MonoBehaviour
     [SerializeField] private Transform[] m_Barriers;
     [SerializeField] private Transform[] m_Waters;
     [SerializeField] private int m_Count = 100;
+    [SerializeField] private int m_Cellsize = 1; // 网格大小
 
-    private SquareGrid grid;
-    private int m_Cellsize = 1; // 网格大小
+    [HideInInspector] public SquareGrid grid;
 
     private void Awake()
     {
