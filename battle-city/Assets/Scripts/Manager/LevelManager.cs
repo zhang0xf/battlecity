@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class LevelManager
 {
-    private GameObject m_Level; // 唯一Level
     private static LevelManager m_Instance = null;
-    private Dictionary<string, string> m_Path = null;   // 路径
-    private Dictionary<string, GameObject> m_Resource = null;   // 加载完成的Level
+    private Dictionary<string, string> m_Path = null;   // 预制体路径
+    private Dictionary<string, GameObject> m_Resource = null;   // 加载完成的关卡
 
     private LevelManager()
     {
@@ -40,9 +39,9 @@ public class LevelManager
         }
     }
 
-    public void LoadLevel(string name)
+    public GameObject LoadLevel(string name)
     {
-        if (null == name) { return; }
+        if (null == name) { return null; }
 
         GameObject obj = null;
 
@@ -52,7 +51,7 @@ public class LevelManager
             if (null == obj)
             {
                 Debug.LogError("can not find prefab");
-                return;
+                return null;
             }
         }
         else 
@@ -62,6 +61,6 @@ public class LevelManager
 
         obj = Object.Instantiate(obj);
 
-        m_Level = obj;
+        return obj;
     }
 }

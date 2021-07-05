@@ -3,6 +3,7 @@ using UnityEngine;
 
 public enum ActionMode
 {
+    CALCULATE,
     ATTACK,
     PATROL,
 }
@@ -16,10 +17,10 @@ public class BehaviorTree
 {
     public BehaviorTree(Behavior root) { m_Root = root; }
 
-    public void Tick(GameObject gameObject)
+    public void Tick(GameObject tank, GameObject grid)
     {
-        if (null == gameObject) { return; }
-        m_Root.Tick(gameObject);
+        if (null == tank || null == grid) { return; }
+        m_Root.Tick(tank, grid);
     }
 
     Behavior m_Root;
@@ -94,6 +95,9 @@ public class BehaviorTreeBuilder
 
         switch (mode)
         {
+            case ActionMode.CALCULATE:
+                behavior = CalculatePathAction.Create();
+                break;
             case ActionMode.ATTACK:
                 behavior = AttckAction.Create();
                 break;

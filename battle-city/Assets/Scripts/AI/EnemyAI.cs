@@ -3,6 +3,7 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private Animator m_Animator;
+    private GameObject m_Level;
 
     private BehaviorTree BT;
 
@@ -18,18 +19,32 @@ public class EnemyAI : MonoBehaviour
                     .CreateAction(ActionMode.ATTACK)
                         .Back()
                     .Back()
-                .CreateAction(ActionMode.PATROL)
+                .CreateSequence()
+                    .CreateAction(ActionMode.CALCULATE)
+                        .Back()
+                    .CreateAction(ActionMode.PATROL)
+                        .Back()
                     .Back()
                 .Back()
             .End();
+
+        // 消息注册
+        MessageController.Instance.AddNotification(NotificationName.LEVEL_CHANGE, RecvLevelChange);
     }
 
     private void FixedUpdate()
     {
-        BT.Tick(gameObject);
+        // BT.Tick(gameObject, m_Level);
     }
 
-    private Direction GetDirection()
+    private void RecvLevelChange(Notification notify)
+    {
+        if (null == notify) { return; }
+        GameObject level = (GameObject)notify.Content;
+        m_Level = level;
+    }
+
+    private Direction GetEnemyDirection()
     {
         AnimatorStateInfo animStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
 

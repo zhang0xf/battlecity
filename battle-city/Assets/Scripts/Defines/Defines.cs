@@ -1,11 +1,12 @@
+using UnityEngine;
+
 // 对象状态
 public enum ObjState
-{ 
-    NONE,
+{
+    INVALID,
     INITIAL,
     LOADING,
     READY,
-    INVALID,
     RELEASING,
 }
 
@@ -40,7 +41,7 @@ public enum UIType : int
     SETTING_UI,
 }
 
-// 坦克方向
+// 方向
 public enum Direction
 {
     NONE,
@@ -52,7 +53,5 @@ public enum Direction
 
 // 委托
 public delegate void MessageControlHandler(Notification notify);
-
 public delegate void StateChangedHandler(object sender, ObjState newState, ObjState oldState);
-
-public delegate void TankMove();
+public delegate void GameObjectChangeHandler(object sender, GameObject obj);

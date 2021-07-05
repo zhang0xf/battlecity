@@ -201,12 +201,12 @@ public class UIManager
 
     public ObjState GetUIState(UIType uIType)
     {
-        if (uIType == UIType.NONE) { return ObjState.NONE; }
+        if (uIType == UIType.NONE) { return ObjState.INVALID; }
 
         if (m_State.ContainsKey(uIType))
             return m_State[uIType];
         else
-            return ObjState.NONE;
+            return ObjState.INVALID;
     }
 
     public bool IsUIReady(UIType uIType)

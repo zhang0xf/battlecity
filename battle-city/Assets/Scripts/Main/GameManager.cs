@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform m_EnemyPool;
     [SerializeField] private GameObject m_Born;
 
+    private GameObject m_CurrLevel;
+    private event GameObjectChangeHandler m_Handler;
     private int m_RoundNumber = 0;
     private Queue<EnemyManager> m_Queue;
     private static GameManager m_Instance = null;
@@ -24,6 +26,19 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance
     {
         get { return m_Instance; }
+    }
+
+    public GameObject CurrLevel
+    {
+        set 
+        {
+            if (m_CurrLevel != value)
+            {
+                m_CurrLevel = value;
+                m_Handler(this, m_CurrLevel);
+            }
+        }
+        get { return m_CurrLevel; }
     }
 
     private void Awake()
@@ -39,6 +54,7 @@ public class GameManager : MonoBehaviour
         }
 
         m_Queue = new Queue<EnemyManager>();
+        m_Handler += HandleCurrLevelChange;
     }
 
     private void Start()
@@ -75,7 +91,7 @@ public class GameManager : MonoBehaviour
         m_MessageText.gameObject.SetActive(false);
 
         // 加载关卡
-        LevelManager.Instance.LoadLevel("level" + m_RoundNumber.ToString());
+        CurrLevel = LevelManager.Instance.LoadLevel("level" + m_RoundNumber.ToString());
 
         // 播放开始音乐
         m_AudioSFX.clip = m_StartMusic;
@@ -149,6 +165,15 @@ public class GameManager : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    private void HandleCurrLevelChange(object sender, GameObject level)
+    {
+        if (null == sender || null == level) { return; }
+
+        Notification na = new Notification(NotificationName.LEVEL_CHANGE, this);
+        na.Content = level;
+        na.Send();
     }
 
     public void ChangeState(GameState state)

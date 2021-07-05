@@ -21,15 +21,17 @@ public class Behavior
         REQUIRE_ALL,
     }
 
-    public BStatus Tick(GameObject gameObject)
+    public BStatus Tick(GameObject tank, GameObject level)
     {
+        if (null == tank || null == level) { return BStatus.INVALID; }
+
         if (m_Status != BStatus.RUNNING)
         {
             OnInitialize();
         }
 
         // 每次TIck()执行一次OnUpdate()
-        m_Status = OnUpdate(gameObject);
+        m_Status = OnUpdate(tank, level);
 
         if (m_Status != BStatus.RUNNING)
         {
@@ -41,7 +43,7 @@ public class Behavior
 
     protected virtual void OnInitialize() { }
     protected virtual void OnTerminate() { }
-    protected virtual BStatus OnUpdate(GameObject gameObject) { return BStatus.INVALID; }
+    protected virtual BStatus OnUpdate(GameObject tank, GameObject grid) { return BStatus.INVALID; }
     public bool IsTerminate() { return m_Status == BStatus.FAILURE || m_Status == BStatus.SUCCESS; }
     public bool IsRunning() { return m_Status == BStatus.RUNNING; }
     public bool IsSuccess() { return m_Status == BStatus.SUCCESS; }
@@ -105,13 +107,13 @@ public class Sequence : Composite
     public static Behavior Create() { return new Sequence(); }
     public override string Name() { return "Sequence"; }
 
-    protected override BStatus OnUpdate(GameObject gameObject)
+    protected override BStatus OnUpdate(GameObject tank, GameObject level)
     {
-        if (null == gameObject) { return BStatus.INVALID; }
+        if (null == tank || null == level) { return BStatus.INVALID; }
 
         foreach (Behavior behavior in m_Childs)
         {
-            BStatus state = behavior.Tick(gameObject);
+            BStatus state = behavior.Tick(tank, level);
 
             // 遇到一个不成功的行为便返回
             if (state != BStatus.SUCCESS)
@@ -130,13 +132,13 @@ public class Selector : Composite
     public static Behavior Create() { return new Selector(); }
     public override string Name() { return "Selector"; }
 
-    protected override BStatus OnUpdate(GameObject gameObject)
+    protected override BStatus OnUpdate(GameObject tank, GameObject level)
     {
-        if (null == gameObject) { return BStatus.INVALID; }
+        if (null == tank || null == level) { return BStatus.INVALID; }
 
         foreach (Behavior behavior in m_Childs)
         {
-            BStatus state = behavior.Tick(gameObject);
+            BStatus state = behavior.Tick(tank, level);
 
             // 遇到一个成功的行为便返回
             if (state == BStatus.SUCCESS)
@@ -169,9 +171,9 @@ public class Parallel : Composite
         }
     }
 
-    protected override BStatus OnUpdate(GameObject gameObject)
+    protected override BStatus OnUpdate(GameObject tank, GameObject level)
     {
-        if (null == gameObject) { return BStatus.INVALID; }
+        if (null == tank || null == level) { return BStatus.INVALID; }
 
         int successCount = 0;
         int failureCount = 0;
@@ -182,7 +184,7 @@ public class Parallel : Composite
         {
             if (behavior.IsTerminate()) { continue; }
 
-            behavior.Tick(gameObject);
+            behavior.Tick(tank, level);
 
             if (behavior.IsSuccess())
             {
@@ -236,9 +238,9 @@ public class Condition_IsSeeEnemy : Condition
     public static Behavior Create(bool negation) { return new Condition_IsSeeEnemy(negation); }
     public override string Name() { return "Condition_IsSeeEnemy"; }
 
-    protected override BStatus OnUpdate(GameObject gameObject)
+    protected override BStatus OnUpdate(GameObject tank, GameObject level)
     {
-        if (null == gameObject) { return BStatus.INVALID; }
+        if (null == tank || null == level) { return BStatus.INVALID; }
 
         // RaycastHit2D result = Physics2D.Raycast(gameObject.transform.position );
 
@@ -254,13 +256,42 @@ public class AttckAction : Action
     public static Behavior Create() { return new AttckAction(); }
     public override string Name() { return "AttckAction"; }
 
-    protected override BStatus OnUpdate(GameObject gameObject)
+    protected override BStatus OnUpdate(GameObject tank, GameObject level)
     {
-        if (null == gameObject) { return BStatus.INVALID; }
+        if (null == tank || null == level) { return BStatus.INVALID; }
 
-        Debug.LogFormat("{0} begin AttckAction", gameObject.name);
+        // Debug.LogFormat("{0} begin AttckAction", gameObject.name);
 
         return BStatus.SUCCESS;
+    }
+}
+
+// 计算路径动作
+public class CalculatePathAction : Action
+{
+    public CalculatePathAction() { }
+
+    public static Behavior Create() { return new CalculatePathAction(); }
+    public override string Name() { return "CalculatePathAction"; }
+
+    protected override BStatus OnUpdate(GameObject tank, GameObject level)
+    {
+        if (null == tank || null == level) { return BStatus.INVALID; }
+
+        SquareGridManager grid = level.GetComponent<SquareGridManager>();
+        if (null == grid) { return BStatus.FAILURE; }
+
+        EnemyMovement move = tank.GetComponent<EnemyMovement>();
+        if (null == grid) { return BStatus.FAILURE; }
+
+        // Location location = new Location(tank.transform.position.x, tank.transform.position.y);
+
+/*        move.m_Path = grid.BreadthFirstSearch(location);
+        if (move.m_Path.Count != 0)
+        {
+            return BStatus.SUCCESS;
+        }*/
+        return BStatus.FAILURE;
     }
 }
 
@@ -272,13 +303,22 @@ public class PatrolAction : Action
     public static Behavior Create() { return new PatrolAction(); }
     public override string Name() { return "PatrolAction"; }
 
-    protected override BStatus OnUpdate(GameObject gameObject)
+    protected override BStatus OnUpdate(GameObject tank, GameObject level)
     {
-        if (null == gameObject) { return BStatus.INVALID; }
+        if (null == tank || null == level) { return BStatus.INVALID; }
 
-        Debug.LogFormat("{0} begin PatrolAction", gameObject.name);
+        SquareGridManager grid = level.GetComponent<SquareGridManager>();
+        if (null == grid) { return BStatus.FAILURE; }
 
-        // Debug.DrawRay()
+        EnemyMovement move = tank.GetComponent<EnemyMovement>();
+        if (null == grid) { return BStatus.FAILURE; }
+
+        if (move.m_Path.Count != 0)
+        {
+            // grid.StartCoroutine(grid.ShowHighlight(new Location(0, 0)));
+
+            move.m_Path.Clear();
+        }
 
         return BStatus.SUCCESS;
     }
