@@ -287,13 +287,18 @@ public class CalculatePathAction : Action
         SquareGrid grid = squareGridManager.grid;
         if (null == grid) { return BStatus.FAILURE; }
 
-        Location location = grid.WorldToSquareGrid(new Vector2(tank.transform.position.x, tank.transform.position.y));
+        Location start = grid.WorldToSquareGrid(new Vector2(tank.transform.position.x, tank.transform.position.y));
 
-        move.m_Path = GridAlgorithm.BreadthFirstSearch(grid, location);
+        // 获取随机目标地点
+        Location goal = grid.RandomLocation();
+        
+        Debug.LogFormat("goal is ({0}, {1})", goal.x, goal.y);
 
-        if (move.m_Path.Count != 0)
-            return BStatus.SUCCESS;
-        return BStatus.FAILURE;
+        // 路径搜索
+        GridSearch.DijkstraSearch(grid, start, goal, out move.m_ComeFrom, out move.m_CostSoFar);
+        if (null == move.m_ComeFrom || null == move.m_CostSoFar) { return BStatus.FAILURE; }
+        
+        return BStatus.SUCCESS;
     }
 }
 
@@ -315,11 +320,7 @@ public class PatrolAction : Action
         EnemyMovement move = tank.GetComponent<EnemyMovement>();
         if (null == grid) { return BStatus.FAILURE; }
 
-        if (move.m_Path.Count != 0)
-        {
-            Debug.LogFormat("find grid count :{0}", move.m_Path.Count);
-            move.m_Path.Clear();
-        }
+        // ...
 
         return BStatus.SUCCESS;
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Location : IEquatable<Location>
 {
@@ -19,7 +20,6 @@ public class Location : IEquatable<Location>
         return x.GetHashCode() + y.GetHashCode();
     }
 
-    // Location 会被比较，所以需要实现此类接口
     public override bool Equals(object obj)
     {
         return Equals(obj as Location);
@@ -39,7 +39,9 @@ public class SquareGrid
     private int height;
     private int width;
     private int m_CellSize;
-
+    private double m_DefaultCost = 1;
+    private double m_GrassCost = 3;
+    private double m_WaterCost = 5;
     private HashSet<Location> m_Walls;
     private HashSet<Location> m_Barrier;
     private HashSet<Location> m_Water;
@@ -79,6 +81,65 @@ public class SquareGrid
                 (location.x < width)   &&
                 (location.y >= -height) &&
                 (location.y < height);
+    }
+
+    public double cost(Location from, Location to)
+    {
+        if (Neighbors(from).Contains(to))
+        {
+            if (IsGrass(to)) { return m_GrassCost; }
+            else if (IsWater(to)) { return m_WaterCost; }
+            else return m_DefaultCost;
+        }
+        return -1;
+    }
+
+    public Location RandomLocation()
+    {
+        while (true)
+        {
+            int x = UnityEngine.Random.Range(-width, width);
+            int y = UnityEngine.Random.Range(-height, height);
+            Location goal = new Location(x, y);
+            if (!InBounds(goal)) { continue; }
+            if (IsBarrier(goal) || IsWall(goal) || IsHome(goal)) { continue; }
+            return goal;
+        }
+    }
+
+    public IEnumerator DrawPath(GameObject level, Dictionary<Location, Location> path, Location start, Location goal)
+    {
+        if (null == level || !path.ContainsKey(goal) || !path.ContainsKey(start)) { yield break; }
+
+        GameObject pathPrefab = Resources.Load("Prefabs/Level/MapElements/Path") as GameObject;
+        if (null == pathPrefab) { yield break; }
+
+        GameObject goalPrefab = Resources.Load("Prefabs/Level/MapElements/Goal") as GameObject;
+        if (null == goalPrefab) { yield break; }
+
+        GameObject map = level.transform.Find("Map").gameObject;
+        if (null == map) { yield break; }
+
+        // draw goal
+        goalPrefab = 
+            UnityEngine.Object.Instantiate(goalPrefab, SquareGridToWorld(goal), map.transform.rotation, map.transform);
+        yield return new WaitForSeconds(1.0f);
+
+        // draw path
+        Image image = pathPrefab.GetComponent<Image>();
+        if (null == image) { yield break; }
+
+        // 线性插值法计算透明度的递减
+        double linearGap = image.color.a / path.Count;
+        
+        Location current = goal;
+
+        while (!current.Equals(start))
+        {
+            pathPrefab = 
+                UnityEngine.Object.Instantiate(pathPrefab, SquareGridToWorld(current), map.transform.rotation, map.transform);
+            current = path[current];
+        }
     }
 
     public bool AddWall(Location location)
@@ -181,7 +242,7 @@ public class SquareGridManager : MonoBehaviour
         
         grid = new SquareGrid(height, width, m_Cellsize);
 
-        // 添加地图障碍
+        // 添加地图预设障碍
         foreach (var wall in m_Walls)
         {
             Location location = grid.WorldToSquareGrid(wall.position);
@@ -217,25 +278,13 @@ public class SquareGridManager : MonoBehaviour
 
             if (grid.AddWall(location))
             {
-                GameObject obj = Resources.Load("Prefabs/Level/Wall") as GameObject;
-                if (null == obj) { yield break; }
-                obj = Instantiate(obj, new Vector2(location.x + 0.5f, location.y + 0.5f),
-                    gameObject.transform.Find("Map").rotation, gameObject.transform.Find("Map"));
+                GameObject wall = Resources.Load("Prefabs/Level/MapElements/Wall") as GameObject;
+                if (null == wall) { yield break; }
+                GameObject map = gameObject.transform.Find("Map").gameObject;
+                if (null == map) { yield break; }
+                wall = Instantiate(wall, grid.SquareGridToWorld(location), map.transform.rotation, map.transform);
             }
         }
-
-        yield return null;
-    }
-
-    public IEnumerator ShowHighlight(Location location)
-    {
-        GameObject mask = Resources.Load("Prefabs/Level/Mask") as GameObject;
-        if (null == mask) { yield break; }
-
-        Vector3 position = new Vector3(location.x, location.y);
-        Quaternion quaternion = new Quaternion(1, 1, 1, 1);
-
-        mask = Instantiate(mask, position, quaternion, gameObject.transform.Find("Map"));
 
         yield return null;
     }

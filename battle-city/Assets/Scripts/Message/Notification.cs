@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class Notification : IEnumerable<KeyValuePair<string, object>>   // IEnumerable : 迭代器
 {
-    private object content;    // 属性
-    public object Sender { private set; get; }  // 自动属性
+    private object content;
+    public object Sender { private set; get; }
     public string Name { private set; get; }
     
     public Notification(string name, object obj)

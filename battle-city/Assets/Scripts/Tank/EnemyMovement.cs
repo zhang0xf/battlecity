@@ -10,16 +10,12 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private AudioSource m_AudioDriving;
     
     public TankInfo m_EnemyInfo;
-    public Dictionary<Location, Location> m_Path;
+    public Dictionary<Location, Location> m_ComeFrom;   // 路径
+    public Dictionary<Location, double> m_CostSoFar;    // 路径花费
 
     public void SetEnemyInfo(int kind)
     {
         m_EnemyInfo = TankConfig.Instance.GetEnemyInfo(kind);
-    }
-
-    private void Awake()
-    {
-        m_Path = new Dictionary<Location, Location>();
     }
 
     private void Update()
@@ -35,5 +31,29 @@ public class EnemyMovement : MonoBehaviour
     private void Move()
     { 
         
+    }
+
+    private Direction GetDirection()
+    {
+        AnimatorStateInfo animStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+
+        if (animStateInfo.IsName("EnemyUp"))
+        {
+            return Direction.UP;
+        }
+        else if (animStateInfo.IsName("EnemyLeft"))
+        {
+            return Direction.LEFT;
+        }
+        else if (animStateInfo.IsName("EnemyDown"))
+        {
+            return Direction.DOWN;
+        }
+        else if (animStateInfo.IsName("EnemyRight"))
+        {
+            return Direction.RIGHT;
+        }
+
+        return Direction.NONE;
     }
 }

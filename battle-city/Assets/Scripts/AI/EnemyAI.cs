@@ -2,9 +2,7 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    [SerializeField] private Animator m_Animator;
     private GameObject m_Level;
-
     private BehaviorTree BT;
 
     private void Awake()
@@ -42,29 +40,5 @@ public class EnemyAI : MonoBehaviour
         if (null == notify) { return; }
         GameObject level = (GameObject)notify.Content;
         m_Level = level;
-    }
-
-    private Direction GetEnemyDirection()
-    {
-        AnimatorStateInfo animStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
-
-        if (animStateInfo.IsName("EnemyUp"))
-        {
-            return Direction.UP;
-        }
-        else if (animStateInfo.IsName("EnemyLeft"))
-        {
-            return Direction.LEFT;
-        }
-        else if (animStateInfo.IsName("EnemyDown"))
-        {
-            return Direction.DOWN;
-        }
-        else if (animStateInfo.IsName("EnemyRight"))
-        {
-            return Direction.RIGHT;
-        }
-
-        return Direction.NONE;
     }
 }
