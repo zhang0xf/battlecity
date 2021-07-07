@@ -53,6 +53,13 @@ MonoBehaviour:
   - {fileID: 3070500399399855843}
   - {fileID: 7080784206711052033}
   - {fileID: 2297873003737436916}
+  m_Grasses: []
+  m_Barriers: []
+  m_Waters: []
+  m_Spawnpoints:
+  - {fileID: 0}
+  m_Count: 100
+  m_Cellsize: 1
 --- !u!1001 &3822893469007411090
 PrefabInstance:
   m_ObjectHideFlags: 0

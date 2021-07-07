@@ -3,7 +3,6 @@ using UnityEngine;
 
 public enum ActionMode
 {
-    CALCULATE,
     ATTACK,
     PATROL,
 }
@@ -95,9 +94,6 @@ public class BehaviorTreeBuilder
 
         switch (mode)
         {
-            case ActionMode.CALCULATE:
-                behavior = CalculatePathAction.Create();
-                break;
             case ActionMode.ATTACK:
                 behavior = AttckAction.Create();
                 break;

@@ -48,6 +48,11 @@ public class SquareGrid
     private HashSet<Location> m_Grass;
     private Dictionary<Direction, Location> m_Direction;
 
+    public Location m_Start;    // 起点
+    public Location m_Goal;     // 目标
+    public Dictionary<Location, Location> m_ComeFrom;   // 路径
+    public Dictionary<Location, double> m_CostSoFar;    // 路径花费
+
     public SquareGrid(int height, int width, int cellSize)
     {
         this.height = height;
@@ -107,41 +112,6 @@ public class SquareGrid
         }
     }
 
-    public IEnumerator DrawPath(GameObject level, Dictionary<Location, Location> path, Location start, Location goal)
-    {
-        if (null == level || !path.ContainsKey(goal) || !path.ContainsKey(start)) { yield break; }
-
-        GameObject pathPrefab = Resources.Load("Prefabs/Level/MapElements/Path") as GameObject;
-        if (null == pathPrefab) { yield break; }
-
-        GameObject goalPrefab = Resources.Load("Prefabs/Level/MapElements/Goal") as GameObject;
-        if (null == goalPrefab) { yield break; }
-
-        GameObject map = level.transform.Find("Map").gameObject;
-        if (null == map) { yield break; }
-
-        // draw goal
-        goalPrefab = 
-            UnityEngine.Object.Instantiate(goalPrefab, SquareGridToWorld(goal), map.transform.rotation, map.transform);
-        yield return new WaitForSeconds(1.0f);
-
-        // draw path
-        Image image = pathPrefab.GetComponent<Image>();
-        if (null == image) { yield break; }
-
-        // 线性插值法计算透明度的递减
-        double linearGap = image.color.a / path.Count;
-        
-        Location current = goal;
-
-        while (!current.Equals(start))
-        {
-            pathPrefab = 
-                UnityEngine.Object.Instantiate(pathPrefab, SquareGridToWorld(current), map.transform.rotation, map.transform);
-            current = path[current];
-        }
-    }
-
     public bool AddWall(Location location)
     {
         if (InBounds(location) && !m_Walls.Contains(location)) 
@@ -190,6 +160,40 @@ public class SquareGrid
         return new Vector2(x, y);
     }
 
+    // 图路径 => 世界路径
+    public Stack<Vector2> SquareGridToWorld(Dictionary<Location, Location> comeFrom)
+    {
+        if (null == comeFrom) { return null; }
+
+        Stack<Vector2> stack = new Stack<Vector2>();
+
+        Location current = m_Goal;
+
+        while (!current.Equals(m_Start))
+        {
+            Vector2 location = SquareGridToWorld(current);
+            stack.Push(location);
+            current = comeFrom[current];
+        }
+        return stack;
+    }
+
+    // 图坐标 => 世界坐标
+    public Dictionary<Vector2, double> SquareGridToWorld(Dictionary<Location, double> costSoFar)
+    {
+        if (null == costSoFar) { return null; }
+
+        Dictionary<Vector2, double> dict = new Dictionary<Vector2, double>();
+
+        foreach (var kv in costSoFar)
+        {
+            Vector2 location = SquareGridToWorld(kv.Key);
+            dict.Add(location, kv.Value);
+        }
+
+        return dict;
+    }
+
     // 世界坐标 => 图坐标
     public Location WorldToSquareGrid(Vector2 location)
     {
@@ -230,10 +234,14 @@ public class SquareGridManager : MonoBehaviour
     [SerializeField] private Transform[] m_Grasses;
     [SerializeField] private Transform[] m_Barriers;
     [SerializeField] private Transform[] m_Waters;
+    [SerializeField] private Transform[] m_Spawnpoints;
     [SerializeField] private int m_Count = 100;
     [SerializeField] private int m_Cellsize = 1; // 网格大小
 
     [HideInInspector] public SquareGrid grid;
+    
+    private GameObject m_GoalPrefab;
+    private Queue<GameObject> m_PathPrefabs;
 
     private void Awake()
     {
@@ -241,6 +249,7 @@ public class SquareGridManager : MonoBehaviour
         int width = (int)((m_RightBoundary.position.x - 0.5) / m_Cellsize);
         
         grid = new SquareGrid(height, width, m_Cellsize);
+        m_PathPrefabs = new Queue<GameObject>();
 
         // 添加地图预设障碍
         foreach (var wall in m_Walls)
@@ -256,11 +265,6 @@ public class SquareGridManager : MonoBehaviour
         // 绘制网格
         DrawSquareGrid();
 #endif
-    }
-
-    private void Update()
-    {
-        
     }
 
     private IEnumerator GenerateWalls(SquareGrid grid)
@@ -287,6 +291,58 @@ public class SquareGridManager : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    public IEnumerator DrawPath(Stack<Vector2> path, Vector2 goal)
+    {
+        if (null == path) { yield break; }
+
+        // 拷贝数据，path在其他地方被需要！
+        Stack<Vector2> pathClone = new Stack<Vector2>(path.ToArray());
+
+        GameObject pathPrefab = Resources.Load("Prefabs/Level/MapElements/Path") as GameObject;
+        if (null == pathPrefab) { yield break; }
+
+        GameObject map = gameObject.transform.Find("Map").gameObject;
+        if (null == map) { yield break; }
+
+        while (pathClone.Count != 0)
+        {
+            Vector2 location = pathClone.Pop();
+            if (Vector2.Distance(location, goal) > 0.05)
+            {
+                pathPrefab = Instantiate(pathPrefab, location, map.transform.rotation, map.transform);
+                m_PathPrefabs.Enqueue(pathPrefab);
+            }
+        }
+    }
+
+    public IEnumerator DrawGoal(Vector2 goal)
+    {
+        GameObject goalPrefab = Resources.Load("Prefabs/Level/MapElements/Goal") as GameObject;
+        if (null == goalPrefab) { yield break; }
+
+        GameObject map = gameObject.transform.Find("Map").gameObject;
+        if (null == map) { yield break; }
+
+        m_GoalPrefab = Instantiate(goalPrefab, goal, map.transform.rotation, map.transform);
+    }
+
+    public void DestroyPathPrefabs()
+    {
+        while (m_PathPrefabs.Count != 0)
+        {
+            Destroy(m_PathPrefabs.Dequeue(), 0.0f);
+        }
+        m_PathPrefabs.Clear();
+    }
+
+    public void DestroyGoalPrefab()
+    {
+        if (m_GoalPrefab != null)
+        {
+            Destroy(m_GoalPrefab, 0.0f);
+        }
     }
 
     public void DrawSquareGrid()

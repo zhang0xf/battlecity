@@ -266,42 +266,6 @@ public class AttckAction : Action
     }
 }
 
-// 计算路径动作
-public class CalculatePathAction : Action
-{
-    public CalculatePathAction() { }
-
-    public static Behavior Create() { return new CalculatePathAction(); }
-    public override string Name() { return "CalculatePathAction"; }
-
-    protected override BStatus OnUpdate(GameObject tank, GameObject level)
-    {
-        if (null == tank || null == level) { return BStatus.INVALID; }
-
-        SquareGridManager squareGridManager = level.GetComponent<SquareGridManager>();
-        if (null == squareGridManager) { return BStatus.FAILURE; }
-
-        EnemyMovement move = tank.GetComponent<EnemyMovement>();
-        if (null == move) { return BStatus.FAILURE; }
-
-        SquareGrid grid = squareGridManager.grid;
-        if (null == grid) { return BStatus.FAILURE; }
-
-        Location start = grid.WorldToSquareGrid(new Vector2(tank.transform.position.x, tank.transform.position.y));
-
-        // 获取随机目标地点
-        Location goal = grid.RandomLocation();
-
-        Debug.LogFormat("goal is ({0}, {1})", goal.x, goal.y);
-
-        // 路径搜索
-        GridSearch.AStarSearch(grid, start, goal, out move.m_ComeFrom, out move.m_CostSoFar);
-        if (null == move.m_ComeFrom || null == move.m_CostSoFar) { return BStatus.FAILURE; }
-        
-        return BStatus.SUCCESS;
-    }
-}
-
 // 巡逻动作
 public class PatrolAction : Action
 {
@@ -314,14 +278,41 @@ public class PatrolAction : Action
     {
         if (null == tank || null == level) { return BStatus.INVALID; }
 
-        SquareGridManager grid = level.GetComponent<SquareGridManager>();
-        if (null == grid) { return BStatus.FAILURE; }
-
         EnemyMovement move = tank.GetComponent<EnemyMovement>();
+        if (null == move) { return BStatus.FAILURE; }
+
+        if (move.IsPathFinding) { return BStatus.SUCCESS; }
+
+        SquareGridManager squareGridManager = level.GetComponent<SquareGridManager>();
+        if (null == squareGridManager) { return BStatus.FAILURE; }
+
+        squareGridManager.DestroyGoalPrefab();
+        squareGridManager.DestroyPathPrefabs();
+
+        SquareGrid grid = squareGridManager.grid;
         if (null == grid) { return BStatus.FAILURE; }
 
-        // ...
+        // 获得起点
+        grid.m_Start = grid.WorldToSquareGrid(new Vector2(tank.transform.position.x, tank.transform.position.y));
 
+        // 获取随机目标地点
+        grid.m_Goal = grid.RandomLocation();
+
+        // 路径搜索
+        GridSearch.AStarSearch(grid, grid.m_Start, grid.m_Goal, out grid.m_ComeFrom, out grid.m_CostSoFar);
+        if (null == grid.m_ComeFrom || null == grid.m_CostSoFar) { return BStatus.FAILURE; }
+
+        // 坐标转换
+        move.m_Goal = grid.SquareGridToWorld(grid.m_Goal);
+        move.m_Path = grid.SquareGridToWorld(grid.m_ComeFrom);
+        move.m_CostSoFar = grid.SquareGridToWorld(grid.m_CostSoFar);
+
+#if UNITY_EDITOR
+        // 标记终点
+        GameManager.Instance.StartCoroutine(squareGridManager.DrawGoal(move.m_Goal));
+        // 绘制路线
+        GameManager.Instance.StartCoroutine(squareGridManager.DrawPath(move.m_Path, move.m_Goal));
+#endif
         return BStatus.SUCCESS;
     }
 }

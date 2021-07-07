@@ -18,8 +18,6 @@ public class EnemyAI : MonoBehaviour
                         .Back()
                     .Back()
                 .CreateSequence()
-                    .CreateAction(ActionMode.CALCULATE)
-                        .Back()
                     .CreateAction(ActionMode.PATROL)
                         .Back()
                     .Back()

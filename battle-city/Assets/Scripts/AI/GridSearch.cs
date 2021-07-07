@@ -8,7 +8,7 @@ public class GridSearch
     {
         // 使用当前位置和目标的曼哈顿距离作为启发式函数的值
         // 当前启发式函数默认每步的花费是1，可调整以适应性能要求。
-        return (goal.x - start.x) + (goal.y - start.y);
+        return Mathf.Abs(goal.x - start.x) + Mathf.Abs(goal.y - start.y);
     }
 
     // 图的广度优先搜索
@@ -117,7 +117,7 @@ public class GridSearch
 
             if (current.Equals(goal))
             {
-                Debug.LogFormat("find goal:({0}, {1})", goal.x, goal.y);
+                // Debug.LogFormat("find goal:({0}, {1})", goal.x, goal.y);
                 break;
             }
 

@@ -10,17 +10,20 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private AudioSource m_AudioDriving;
     
     public TankInfo m_EnemyInfo;
-    public Dictionary<Location, Location> m_ComeFrom;   // 路径
-    public Dictionary<Location, double> m_CostSoFar;    // 路径花费
+
+    public Vector2 m_Goal;
+    public Stack<Vector2> m_Path;
+    public bool IsPathFinding = false;
+    public Dictionary<Vector2, double> m_CostSoFar;
+
+    private void Awake()
+    {
+        m_AudioDriving.clip = m_EngineIdle;
+    }
 
     public void SetEnemyInfo(int kind)
     {
         m_EnemyInfo = TankConfig.Instance.GetEnemyInfo(kind);
-    }
-
-    private void Update()
-    {
-
     }
 
     private void FixedUpdate()
@@ -29,31 +32,41 @@ public class EnemyMovement : MonoBehaviour
     }
 
     private void Move()
-    { 
-        
+    {
+        if (Vector2.Distance(m_Goal, m_Rigidbody.position) < 0.05) // 两个坐标不会完全相等，大约有0.016左右的误差
+        {
+            IsPathFinding = false;
+        }
+
+        if (null == m_Path || m_Path.Count == 0) { return; }
+
+        IsPathFinding = true;
+
+        Vector2 start = m_Rigidbody.position;
+
+        Vector2 to = m_Path.Peek();
+
+        Vector2 direction = to - start;
+
+        float distance = Vector2.Distance(to, start);
+
+        if (distance > 0.05)
+        {
+            Vector2 movement = direction * m_EnemyInfo.Speed * Time.deltaTime;
+            m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+        }
+        else
+        {
+            m_Path.Pop();
+        }
+
     }
 
-    private Direction GetDirection()
+    private void SetAnimation(Vector2 direction)
     {
-        AnimatorStateInfo animStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
-
-        if (animStateInfo.IsName("EnemyUp"))
-        {
-            return Direction.UP;
-        }
-        else if (animStateInfo.IsName("EnemyLeft"))
-        {
-            return Direction.LEFT;
-        }
-        else if (animStateInfo.IsName("EnemyDown"))
-        {
-            return Direction.DOWN;
-        }
-        else if (animStateInfo.IsName("EnemyRight"))
-        {
-            return Direction.RIGHT;
-        }
-
-        return Direction.NONE;
+        if (direction.x > 0) { m_Animator.SetBool("Right", true); }
+        if (direction.x < 0) { m_Animator.SetBool("Left", true); }
+        if (direction.y < 0) { m_Animator.SetBool("Down", true); }
+        if (direction.y > 0) { m_Animator.SetBool("UP", true); }
     }
 }

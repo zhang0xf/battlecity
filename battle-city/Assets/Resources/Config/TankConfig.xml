@@ -37,31 +37,31 @@
 	</enemy>
 	<enemy id = "1" comment = "迅捷敌人">
 		<FORM value_type = "string" value = "quick" comment = "形态名"/>
-		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
+		<SPEED value_type = "float" value = "6.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</enemy>
 	<enemy id = "2" comment = "装甲敌人">
 		<FORM value_type = "string" value = "armor" comment = "形态名"/>
-		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
+		<SPEED value_type = "float" value = "6.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</enemy>
 	<enemy id = "3" comment = "基础敌人——强化">
 		<FORM value_type = "string" value = "basic_strengthen" comment = "形态名"/>
-		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
+		<SPEED value_type = "float" value = "6.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</enemy>
 	<enemy id = "4" comment = "迅捷敌人——强化">
 		<FORM value_type = "string" value = "quick_strengthen" comment = "形态名"/>
-		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
+		<SPEED value_type = "float" value = "6.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</enemy>
 	<enemy id = "5" comment = "装甲敌人——强化">
 		<FORM value_type = "string" value = "armor_strengthen" comment = "形态名"/>
-		<SPEED value_type = "float" value = "1.0" comment = "速度"/>
+		<SPEED value_type = "float" value = "6.0" comment = "速度"/>
 		<HEALTH value_type = "int" value = "1" comment = "血量"/>
 		<COOLING value_type = "float" value = "1.0" comment = "射击冷却时间"/> 
 	</enemy>
