@@ -291,11 +291,11 @@ public class CalculatePathAction : Action
 
         // 获取随机目标地点
         Location goal = grid.RandomLocation();
-        
+
         Debug.LogFormat("goal is ({0}, {1})", goal.x, goal.y);
 
         // 路径搜索
-        GridSearch.DijkstraSearch(grid, start, goal, out move.m_ComeFrom, out move.m_CostSoFar);
+        GridSearch.AStarSearch(grid, start, goal, out move.m_ComeFrom, out move.m_CostSoFar);
         if (null == move.m_ComeFrom || null == move.m_CostSoFar) { return BStatus.FAILURE; }
         
         return BStatus.SUCCESS;
