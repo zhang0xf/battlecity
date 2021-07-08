@@ -40,12 +40,13 @@ public class EnemyMovement : MonoBehaviour
 
     private void Move()
     {
-        // 允许和目标之间的误差(浮点计算一定有误差)
+        // 寻路结束：允许和目标之间的误差(浮点计算一定有误差)
         if (Vector2.Distance(m_Goal, m_Rigidbody.position) < 0.05)
         {
             IsPathFinding = false;
         }
 
+        // 每帧更新
         m_From = m_Rigidbody.position;
 
         if (!IsPathFinding)
@@ -61,11 +62,14 @@ public class EnemyMovement : MonoBehaviour
         // 每帧更新
         m_Distance = Vector2.Distance(m_To, m_From);
 
-        // 确保不会越过目标
+        // 距离减小后要确保不会越过目标
         if (m_Distance > 0.03 && (Vector2.Dot(m_From, m_Direction) < Vector2.Dot(m_To, m_Direction)))
         {
             Vector2 movement = m_Direction * m_EnemyInfo.Speed * Time.deltaTime;
             m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+            SetAnimation(m_Direction);
+            // m_AudioDriving.clip = m_EngineDriving;
+            // m_AudioDriving.Play();   // 有点吵
         }
         else
         {
@@ -129,9 +133,36 @@ public class EnemyMovement : MonoBehaviour
 
     private void SetAnimation(Vector2 direction)
     {
-        if (direction.x > 0) { m_Animator.SetBool("Right", true); }
-        if (direction.x < 0) { m_Animator.SetBool("Left", true); }
-        if (direction.y < 0) { m_Animator.SetBool("Down", true); }
-        if (direction.y > 0) { m_Animator.SetBool("UP", true); }
+        if (direction.x > 0 && direction.y == 0)
+        {
+            m_Animator.SetBool("Right", true);
+            m_Animator.SetBool("Left", false);
+            m_Animator.SetBool("Down", false);
+            m_Animator.SetBool("Up", false);
+        }
+        
+        if (direction.x < 0 && direction.y == 0) 
+        {
+            m_Animator.SetBool("Left", true);
+            m_Animator.SetBool("Right", false);
+            m_Animator.SetBool("Down", false);
+            m_Animator.SetBool("Up", false);
+        }
+        
+        if (direction.y < 0 && direction.x == 0) 
+        { 
+            m_Animator.SetBool("Down", true);
+            m_Animator.SetBool("Right", false);
+            m_Animator.SetBool("Left", false);
+            m_Animator.SetBool("Up", false);
+        }
+        
+        if (direction.y > 0 && direction.x == 0)
+        {
+            m_Animator.SetBool("Up", true);
+            m_Animator.SetBool("Right", false);
+            m_Animator.SetBool("Left", false);
+            m_Animator.SetBool("Down", false);
+        }
     }
 }
