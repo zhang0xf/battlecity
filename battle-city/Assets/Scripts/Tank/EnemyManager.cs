@@ -4,7 +4,6 @@ using UnityEngine;
 [Serializable]
 public class EnemyManager
 {
-    public Transform[] m_EnemySpawnPoints;
     [HideInInspector] public Transform m_SpawnPoint;
     [HideInInspector] public GameObject m_Instance;
     [HideInInspector] public int m_EnemyKind;

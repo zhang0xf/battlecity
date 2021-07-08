@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Location : IEquatable<Location>
 {
@@ -75,12 +74,12 @@ public class SquareGrid
         m_Direction.Add(Direction.RIGHT, new Location(1, 0));
     }
 
-    private bool IsHome(Location location) { return location.Equals(new Location(0, 0)); }
-    private bool IsWall(Location location) { return m_Walls.Contains(location); }
-    private bool IsGrass(Location location) { return m_Grass.Contains(location); }
-    private bool IsBarrier(Location location) { return m_Barrier.Contains(location); }
-    private bool IsWater(Location location) { return m_Water.Contains(location); }
-    private bool InBounds(Location location)
+    public bool IsHome(Location location) { return location.Equals(new Location(0, 0)); }
+    public bool IsWall(Location location) { return m_Walls.Contains(location); }
+    public bool IsGrass(Location location) { return m_Grass.Contains(location); }
+    public bool IsBarrier(Location location) { return m_Barrier.Contains(location); }
+    public bool IsWater(Location location) { return m_Water.Contains(location); }
+    public bool InBounds(Location location)
     {
         return  (location.x >= -width)  &&
                 (location.x < width)   &&
@@ -260,6 +259,9 @@ public class SquareGridManager : MonoBehaviour
 
         // 随机生成障碍
         StartCoroutine(GenerateWalls(grid));
+        StartCoroutine(GenerateBarriers(grid));
+        StartCoroutine(GenerateGrasses(grid));
+        StartCoroutine(GenerateWaters(grid));
 
 #if UNITY_EDITOR
         // 绘制网格
@@ -280,9 +282,107 @@ public class SquareGridManager : MonoBehaviour
 
             Location location = grid.WorldToSquareGrid(new Vector2(random_x, random_y));
 
+            if (grid.IsGrass(location) ||
+                grid.IsWater(location) ||
+                grid.IsHome(location) ||
+                grid.IsBarrier(location)) { continue; }
+
             if (grid.AddWall(location))
             {
                 GameObject wall = Resources.Load("Prefabs/Level/MapElements/Wall") as GameObject;
+                if (null == wall) { yield break; }
+                GameObject map = gameObject.transform.Find("Map").gameObject;
+                if (null == map) { yield break; }
+                wall = Instantiate(wall, grid.SquareGridToWorld(location), map.transform.rotation, map.transform);
+            }
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator GenerateBarriers(SquareGrid grid)
+    {
+        if (null == grid) { yield break; }
+
+        for (int i = 0; i < m_Count / 2; i++)
+        {
+            float random_x =
+                UnityEngine.Random.Range((int)m_LeftBoundary.position.x + 0.5f, (int)m_RightBoundary.position.x - 0.5f);
+            float random_y =
+                UnityEngine.Random.Range((int)m_ButtomBoundary.position.y + 0.5f, (int)m_TopBoundary.position.y - 0.5f);
+
+            Location location = grid.WorldToSquareGrid(new Vector2(random_x, random_y));
+
+            if (grid.IsWall(location) ||
+                grid.IsGrass(location) ||
+                grid.IsWater(location) ||
+                grid.IsHome(location)) { continue; }
+
+            if (grid.AddBarrier(location))
+            {
+                GameObject wall = Resources.Load("Prefabs/Level/MapElements/Barrier") as GameObject;
+                if (null == wall) { yield break; }
+                GameObject map = gameObject.transform.Find("Map").gameObject;
+                if (null == map) { yield break; }
+                wall = Instantiate(wall, grid.SquareGridToWorld(location), map.transform.rotation, map.transform);
+            }
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator GenerateGrasses(SquareGrid grid)
+    {
+        if (null == grid) { yield break; }
+
+        for (int i = 0; i < m_Count / 2; i++)
+        {
+            float random_x =
+                UnityEngine.Random.Range((int)m_LeftBoundary.position.x + 0.5f, (int)m_RightBoundary.position.x - 0.5f);
+            float random_y =
+                UnityEngine.Random.Range((int)m_ButtomBoundary.position.y + 0.5f, (int)m_TopBoundary.position.y - 0.5f);
+
+            Location location = grid.WorldToSquareGrid(new Vector2(random_x, random_y));
+
+            if (grid.IsWall(location) ||
+                grid.IsWater(location) ||
+                grid.IsHome(location) ||
+                grid.IsBarrier(location)) { continue; }
+
+            if (grid.AddBarrier(location))
+            {
+                GameObject wall = Resources.Load("Prefabs/Level/MapElements/Grass") as GameObject;
+                if (null == wall) { yield break; }
+                GameObject map = gameObject.transform.Find("Map").gameObject;
+                if (null == map) { yield break; }
+                wall = Instantiate(wall, grid.SquareGridToWorld(location), map.transform.rotation, map.transform);
+            }
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator GenerateWaters(SquareGrid grid)
+    {
+        if (null == grid) { yield break; }
+
+        for (int i = 0; i < m_Count / 2; i++)
+        {
+            float random_x =
+                UnityEngine.Random.Range((int)m_LeftBoundary.position.x + 0.5f, (int)m_RightBoundary.position.x - 0.5f);
+            float random_y =
+                UnityEngine.Random.Range((int)m_ButtomBoundary.position.y + 0.5f, (int)m_TopBoundary.position.y - 0.5f);
+
+            Location location = grid.WorldToSquareGrid(new Vector2(random_x, random_y));
+
+            if (grid.IsWall(location) ||
+                grid.IsGrass(location) ||
+                grid.IsHome(location) ||
+                grid.IsBarrier(location)) { continue; }
+
+            if (grid.AddBarrier(location))
+            {
+                GameObject wall = Resources.Load("Prefabs/Level/MapElements/Water") as GameObject;
                 if (null == wall) { yield break; }
                 GameObject map = gameObject.transform.Find("Map").gameObject;
                 if (null == map) { yield break; }

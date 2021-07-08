@@ -41,7 +41,7 @@ public class EnemyMovement : MonoBehaviour
     private void Move()
     {
         // 寻路结束：允许和目标之间的误差(浮点计算一定有误差)
-        if (Vector2.Distance(m_Goal, m_Rigidbody.position) < 0.05)
+        if (Vector2.Distance(m_Goal, m_Rigidbody.position) < 0.07)
         {
             IsPathFinding = false;
         }
@@ -96,6 +96,8 @@ public class EnemyMovement : MonoBehaviour
 
         Queue<KeyValuePair<Vector2, KeyValuePair<Vector2, Vector2>>> queue
             = new Queue<KeyValuePair<Vector2, KeyValuePair<Vector2, Vector2>>>();
+
+        if (pathClone.Count == 0) { return null; }
 
         Vector2 from = pathClone.Dequeue();
         Vector2 directRefer = (pathClone.Peek() - from).normalized;  // normalized:单位向量

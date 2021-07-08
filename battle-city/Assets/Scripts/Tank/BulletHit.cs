@@ -40,7 +40,24 @@ public class BulletHit : MonoBehaviour
         }
         else if (other.tag == "Enemy")
         {
+            m_ExplosionParticles.transform.parent = null;
 
+            m_ExplosionParticles.Play();
+            m_ExplosionAudio.Play();
+
+            other.gameObject.GetComponent<EnemyMovement>().enabled = false;
+            other.gameObject.GetComponent<EnemyShooting>().enabled = false;
+
+            // 清理路径
+            GameManager.Instance.CurrLevel.GetComponent<SquareGridManager>().DestroyGoalPrefab();
+            GameManager.Instance.CurrLevel.GetComponent<SquareGridManager>().DestroyPathPrefabs();
+
+            Destroy(m_ExplosionParticles.gameObject, mainModule.duration);
+            Destroy(gameObject);
+            Destroy(other.gameObject);
+
+            // 生成一个新的敌人
+            GameManager.Instance.StartCoroutine(GameManager.Instance.GenerateEnemy());
         }
         else if (other.tag == "Home")
         {
