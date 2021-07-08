@@ -297,8 +297,7 @@ public class SquareGridManager : MonoBehaviour
     {
         if (null == path) { yield break; }
 
-        // 拷贝数据，path在其他地方被需要！
-        Stack<Vector2> pathClone = new Stack<Vector2>(path.ToArray());
+        Queue<Vector2> pathClone = new Queue<Vector2>(path.ToArray());
 
         GameObject pathPrefab = Resources.Load("Prefabs/Level/MapElements/Path") as GameObject;
         if (null == pathPrefab) { yield break; }
@@ -308,7 +307,7 @@ public class SquareGridManager : MonoBehaviour
 
         while (pathClone.Count != 0)
         {
-            Vector2 location = pathClone.Pop();
+            Vector2 location = pathClone.Dequeue();
             if (Vector2.Distance(location, goal) > 0.05)
             {
                 pathPrefab = Instantiate(pathPrefab, location, map.transform.rotation, map.transform);

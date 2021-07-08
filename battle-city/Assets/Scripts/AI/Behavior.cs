@@ -307,6 +307,9 @@ public class PatrolAction : Action
         move.m_Path = grid.SquareGridToWorld(grid.m_ComeFrom);
         move.m_CostSoFar = grid.SquareGridToWorld(grid.m_CostSoFar);
 
+        // 合并路径
+        move.m_MergePath = move.MergePath(move.m_Path);
+
 #if UNITY_EDITOR
         // 标记终点
         GameManager.Instance.StartCoroutine(squareGridManager.DrawGoal(move.m_Goal));
