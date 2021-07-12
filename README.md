@@ -1,17 +1,6 @@
 # battle city
 
 ### Overview
-A classic game named "batlle city", reproduced with unity engine.
-
-### How to play?
+A classic game recreated with unity.
 
 ### Moudles
-* config
-* net
-* audio
-* animation
-* message controller
-* AI
-* UI
-
-### Reference
