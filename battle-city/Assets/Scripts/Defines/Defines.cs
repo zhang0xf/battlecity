@@ -27,10 +27,8 @@ public enum GameState
     CONTINUE,
     CUSTOMIZE,
     ONLINE,
-    START,
     LOGIN,
     GAMEOVER,
-    EXIT
 }
 
 // UI

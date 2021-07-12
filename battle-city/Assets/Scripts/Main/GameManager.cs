@@ -133,8 +133,6 @@ public class GameManager : MonoBehaviour
 
         // 显示GameOver图片
         m_GameOverImage.gameObject.SetActive(true);
-
-        // 等待3秒
         yield return new WaitForSeconds(3.0f);
 
         // 销毁坦克
@@ -263,9 +261,6 @@ public class GameManager : MonoBehaviour
                 // StateMachine.Instance.CurrState = null;
                 break;
             case GameState.ONLINE:
-                // StateMachine.Instance.CurrState = null;
-                break;
-            case GameState.EXIT:
                 // StateMachine.Instance.CurrState = null;
                 break;
             case GameState.GAMEOVER:
