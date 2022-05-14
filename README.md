@@ -1,3 +1,7 @@
-# battle-city
+# battlecity
 
-A classic game recreated with unity.
+unity exercise - battlecity
+
+# version
+
+Unity 2020.3.20f1 (64-bit)
