@@ -1,7 +1,7 @@
 # battlecity
 
-unity exercise - battlecity
+unity demo - battlecity
 
 # version
 
-Unity 2020.3.20f1 (64-bit)
+Unity 2021.3.6f1c1 (64-bit)
